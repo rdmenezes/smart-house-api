@@ -4,11 +4,23 @@ using namespace std;
 
 cHouse::cHouse()
 {
+	Name = "Default";
+}
+
+cHouse::cHouse(const cHouse &copy)
+{
+	Name = new char [10];
+	for (size_t i=0; i <= strlen(copy.Name); i++)
+	{
+		Name[i] = copy.Name[i];
+	}
+	m_pFloors = copy.m_pFloors;
 }
 
 
 cHouse::~cHouse()
 {
+	delete [] Name;
 }
 
 void cHouse::AddFloor(cFloor &floor)
@@ -22,6 +34,7 @@ void cHouse::AddFloor()
 
 void cHouse::Print()
 {
+	cout << Name << "\n";
 	for (size_t i=0; i < m_pFloors.size(); i++)
 	{
 		cout << "{" << endl;
