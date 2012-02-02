@@ -22,7 +22,7 @@ void cHouse::AddFloor()
 
 void cHouse::Print()
 {
-	for (int i=0; i < m_pFloors.size(); i++)
+	for (size_t i=0; i < m_pFloors.size(); i++)
 	{
 		cout << "{" << endl;
 		m_pFloors[i].Print();
