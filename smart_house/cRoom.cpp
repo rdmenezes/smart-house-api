@@ -23,7 +23,7 @@ void cRoom::AddWindow()
 
 void cRoom::Print()
 {
-	for (int i=0; i < m_pWindows.size(); i++)
+	for (size_t i=0; i < m_pWindows.size(); i++)
 	{
 		cout << "\t  Window " << i << " is " << (m_pWindows[i].m_bOpened ? "opened":"closed") << endl;
 	}
