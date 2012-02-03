@@ -67,20 +67,17 @@ void DelHouse()
 	cin.getline (Name, 10);
 	if (rHouses.size() != 0)
 	{
-		for (size_t i = 0; i < rHouses.size(); ++i)
+		for (size_t i = 0; i <= rHouses.size(); ++i)
 		{
 			if (strcmp (rHouses[i].Name, Name) == 0)
 			{
-				rHouses.erase(rHouses.begin()+i);
+				rHouses.erase(rHouses.begin());
 				cout << "\nHouse " << Name << " is deleted\n";
-				break;
+				return;
 			}
-			else
-			{
-				cout << "\nCan't delete house \"" << Name << "\". Reason: Not found"; 
-			}
-
 		}
+
+		cout << "\nCan't delete house \"" << Name << "\". Reason: Not found\n"; 
 	}
 	else
 	{
@@ -112,8 +109,11 @@ void AddHouse()
 void Print()
 {
 	cout << "\nYou Smart-House objects:" << endl;
-	for (size_t i=0; i<rHouses.size(); ++i)
+	if (rHouses.size() != 0)
 	{
-		rHouses[i].Print();
+		for (size_t i=0; i < rHouses.size(); ++i)
+		{
+			rHouses[i].Print();
+		}
 	}
 }
