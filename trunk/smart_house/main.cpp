@@ -71,7 +71,7 @@ void DelHouse()
 		{
 			if (strcmp (rHouses[i].Name, Name) == 0)
 			{
-				rHouses.erase(rHouses.begin());
+				rHouses.erase(rHouses.begin()+i);
 				cout << "\nHouse " << Name << " is deleted\n";
 				return;
 			}
