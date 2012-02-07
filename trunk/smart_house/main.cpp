@@ -20,20 +20,20 @@ int main ()
 	cString string;	
 	cout << "\nWelcome to your Smart House Manager\n";
 	cout << ">";
-	
-	while ((string.GetString()) && (string != &cString("exit")))
+
+	while ((string.GetString()) && (string != "exit"))
 	{
-		if (string == &cString("add house"))
+		if (string == "add house")
 		{			
 			AddHouse();
 		}
 
-		if (string == &cString("delete house"))
+		if (string == "delete house")
 		{
 			DelHouse();
 		}
 
-		if (string == &cString("print"))
+		if (string == "print")
 		{
 			Print();
 		}
