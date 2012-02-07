@@ -1,9 +1,9 @@
 #include "iostream"
-#include "cstring"
 #include "cHouse.h"
 #include "cWindow.h"
 #include "cRoom.h"
 #include "cFloor.h"
+#include "cString.h"
 
 using namespace std;
 
@@ -14,25 +14,26 @@ void DelHouse();
 void AddHouse();
 void Print();
 
+
 int main ()
 {
-	char  string[20];
-	
+	cString string;	
 	cout << "\nWelcome to your Smart House Manager\n";
 	cout << ">";
-	while ( ((cin.getline (string, 20)) && ((strcmp (string, "exit")) != 0) ))
+	
+	while ((string.GetString()) && (string != &cString("exit")))
 	{
-		if (((strcmp (string, "add house")) == 0))
+		if (string == &cString("add house"))
 		{			
 			AddHouse();
 		}
 
-		if (((strcmp (string, "delete house")) == 0))
+		if (string == &cString("delete house"))
 		{
 			DelHouse();
 		}
 
-		if (((strcmp (string, "print")) == 0))
+		if (string == &cString("print"))
 		{
 			Print();
 		}
@@ -42,6 +43,8 @@ int main ()
 
 	system ("pause"); 
 }
+
+//--------------------------------------------------------------------------------
 
 bool IsNameAvailable(char* Name)
 {
@@ -59,6 +62,31 @@ bool IsNameAvailable(char* Name)
 	}
 	return true;
 }
+
+//--------------------------------------------------------------------------------
+
+void AddHouse()
+{
+	char* Name = new char [10];
+	cout << "\nEnter your house name\n" << ">";
+	cin.getline (Name, 10);
+
+	while ((strcmp (Name, "") == 0))
+	{
+		cout << "\nEnter your house name\n" << ">";
+		cin.getline (Name, 10);
+	}
+
+	if (IsNameAvailable(Name))
+	{
+		cHouse house;
+		house.Name = Name;
+		rHouses.push_back(house);
+		cout << "\nYou've created a House \"" << Name << "\"" << endl;
+	}
+}
+
+//--------------------------------------------------------------------------------
 
 void DelHouse()
 {
@@ -85,26 +113,7 @@ void DelHouse()
 	}
 }
 
-void AddHouse()
-{
-	char* Name = new char [10];
-	cout << "\nEnter your house name\n" << ">";
-	cin.getline (Name, 10);
-
-	while ((strcmp (Name, "") == 0))
-	{
-		cout << "\nEnter your house name\n" << ">";
-		cin.getline (Name, 10);
-	}
-
-	if (IsNameAvailable(Name))
-	{
-		cHouse house;
-		house.Name = Name;
-		rHouses.push_back(house);
-		cout << "\nYou've created a House \"" << Name << "\"" << endl;
-	}
-}
+//--------------------------------------------------------------------------------
 
 void Print()
 {
