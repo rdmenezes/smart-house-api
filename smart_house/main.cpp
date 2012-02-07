@@ -9,7 +9,7 @@ using namespace std;
 
 vector<cHouse> rHouses;
 
-bool IsNameAvailable(char* Name);
+bool IsNameAvailable(cString Name);
 void DelHouse();
 void AddHouse();
 void Print();
@@ -46,13 +46,13 @@ int main ()
 
 //--------------------------------------------------------------------------------
 
-bool IsNameAvailable(char* Name)
+bool IsNameAvailable(cString Name)
 {
 	if (rHouses.size() != 0)
 	{
 		for (size_t i = 0; i < rHouses.size(); ++i)
 		{
-			if (strcmp (rHouses[i].Name, Name) == 0)
+			if (rHouses[i].Name == Name)
 			{
 				cout << "\nThere's already a house with the same name\n";
 				return false;
@@ -67,14 +67,14 @@ bool IsNameAvailable(char* Name)
 
 void AddHouse()
 {
-	char* Name = new char [10];
+	cString Name;
 	cout << "\nEnter your house name\n" << ">";
-	cin.getline (Name, 10);
+	Name.GetString();
 
-	while ((strcmp (Name, "") == 0))
+	while (Name == "")
 	{
 		cout << "\nEnter your house name\n" << ">";
-		cin.getline (Name, 10);
+		Name.GetString();
 	}
 
 	if (IsNameAvailable(Name))
@@ -82,7 +82,7 @@ void AddHouse()
 		cHouse house;
 		house.Name = Name;
 		rHouses.push_back(house);
-		cout << "\nYou've created a House \"" << Name << "\"" << endl;
+		cout << "\nYou've created a House \"" << Name.str << "\"" << endl;
 	}
 }
 
@@ -91,21 +91,21 @@ void AddHouse()
 void DelHouse()
 {
 	cout << "\nEnter the house name you want to delete\n>";
-	char* Name = new char [10];
-	cin.getline (Name, 10);
+	cString Name;
+	Name.GetString();
 	if (rHouses.size() != 0)
 	{
 		for (size_t i = 0; i <= rHouses.size(); ++i)
 		{
-			if (strcmp (rHouses[i].Name, Name) == 0)
+			if (rHouses[i].Name == Name)
 			{
 				rHouses.erase(rHouses.begin()+i);
-				cout << "\nHouse " << Name << " is deleted\n";
+				cout << "\nHouse " << Name.str << " is deleted\n";
 				return;
 			}
 		}
 
-		cout << "\nCan't delete house \"" << Name << "\". Reason: Not found\n"; 
+		cout << "\nCan't delete house \"" << Name.str << "\". Reason: Not found\n"; 
 	}
 	else
 	{
