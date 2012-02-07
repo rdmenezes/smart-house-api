@@ -4,6 +4,8 @@ cString::cString()
 {
 }
 
+//=========================================================================//
+
 cString::cString (char* string)
 {
 	for (size_t i=0; i <= strlen(string); i++)
@@ -12,9 +14,24 @@ cString::cString (char* string)
 	}
 }
 
+//=========================================================================//
+
+cString::cString(const cString &copy)
+{
+	for (size_t i=0; i <= strlen(copy.str); i++)
+	{
+		str[i] = copy.str[i];
+	}
+}
+
+
+//=========================================================================//
+
 cString::~cString()
 {
 }
+
+//=========================================================================//
 
 bool cString::GetString()
 {
@@ -28,9 +45,22 @@ bool cString::GetString()
 	}
 }
 
-bool cString::operator == (cString* string)
+//=========================================================================//
+
+cString& cString::operator = (const cString &copy)
 {
-	if(strcmp(string->str,str) == 0) 
+		for (size_t i=0; i <= strlen(copy.str); i++)
+		{
+			str[i] = copy.str[i];
+		}
+		return *this;
+}
+
+//=========================================================================//
+
+bool cString::operator == (cString string)
+{
+	if(strcmp(string.str,str) == 0) 
 	{
 		return true;
 	}
@@ -40,9 +70,39 @@ bool cString::operator == (cString* string)
 	}
 }
 
-bool cString::operator != (cString* string)
+//=========================================================================//
+
+bool cString::operator == (const char* string)
 {
-	if(strcmp(string->str,str) == 0) 
+	if (strcmp(string,str) == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+//=========================================================================//
+
+bool cString::operator != (const char* string)
+{
+	if (strcmp(string,str) == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+//=========================================================================//
+
+bool cString::operator != (cString string)
+{
+	if(strcmp(string.str,str) == 0) 
 	{
 		return false;
 	}
@@ -51,3 +111,5 @@ bool cString::operator != (cString* string)
 		return true; 
 	}
 }
+
+//=========================================================================//
