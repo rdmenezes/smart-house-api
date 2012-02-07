@@ -9,21 +9,13 @@ cHouse::cHouse()
 
 cHouse::cHouse(const cHouse &copy)
 {
-	Name = new char [10];
-	for (size_t i=0; i <= strlen(copy.Name); i++)
-	{
-		Name[i] = copy.Name[i];
-	}
+	Name = copy.Name;
 	m_pFloors = copy.m_pFloors;
 }
 
 cHouse &cHouse::operator = ( const cHouse &copy )
 {
-	Name = new char [10];
-	for (size_t i=0; i <= strlen(copy.Name); i++)
-	{
-		Name[ i ] = copy.Name[ i ];
-	}
+	Name = copy.Name;
 	m_pFloors = copy.m_pFloors;
 	return *this;
 }
@@ -31,7 +23,6 @@ cHouse &cHouse::operator = ( const cHouse &copy )
 
 cHouse::~cHouse()
 {
-	delete [] Name;
 }
 
 void cHouse::AddFloor(cFloor &floor)
@@ -45,7 +36,7 @@ void cHouse::AddFloor()
 
 void cHouse::Print()
 {
-	cout << Name << "\n";
+	cout << Name.str << "\n";
 	for (size_t i=0; i < m_pFloors.size(); i++)
 	{
 		cout << "{" << endl;

@@ -1,7 +1,7 @@
 #pragma once
 #include "vector"
 #include "cFloor.h"
-#include "string"
+#include "cString.h"
 using namespace std;
 
 class cHouse
@@ -12,7 +12,7 @@ public:
 	cHouse &cHouse::operator = ( const cHouse &copy );
 	~cHouse();
 	vector <cFloor> m_pFloors;
-	char* Name;
+	cString Name;
 
 	void AddFloor(cFloor &floor);
 	void AddFloor();
