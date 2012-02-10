@@ -11,7 +11,7 @@ public:
 	cString(const cString &copy);
 	~cString();
 
-	cString& cString::operator = (const cString &copy);
+	cString& operator = (const cString &copy);
 	bool operator == (cString string);
 	bool operator != (cString string);
 	bool operator == (const char* string);
