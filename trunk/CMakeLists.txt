@@ -26,7 +26,7 @@ macro (add_app_executable BUILD_TYPE)
 		set_target_properties (${PROJECT}-${BUILD_TYPE} PROPERTIES COMPILE_FLAGS "${CMAKE_C_FLAGS_DEBUG}")
 	elseif ("${BUILD_TYPE}" STREQUAL "release")
 		set_target_properties (${PROJECT}-${BUILD_TYPE} PROPERTIES COMPILE_FLAGS "${CMAKE_C_FLAGS_RELEASE}")
-	endif())
+	endif()
 endmacro()
 
 MESSAGE("Current OS is ${CMAKE_SYSTEM_NAME}") 
