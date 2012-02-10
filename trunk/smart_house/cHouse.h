@@ -9,7 +9,7 @@ class cHouse
 public:
 	cHouse();
 	cHouse(const cHouse &copy);
-	cHouse &cHouse::operator = ( const cHouse &copy );
+	cHouse &operator = ( const cHouse &copy );
 	~cHouse();
 	vector <cFloor> m_pFloors;
 	cString Name;

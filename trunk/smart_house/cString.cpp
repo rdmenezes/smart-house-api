@@ -1,5 +1,5 @@
 #include "cString.h"
-
+#include <string.h>
 cString::cString()
 {
 }
