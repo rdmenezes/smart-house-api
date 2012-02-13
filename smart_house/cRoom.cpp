@@ -25,6 +25,6 @@ void cRoom::Print()
 {
 	for (size_t i=0; i < m_pWindows.size(); i++)
 	{
-		cout << "\t  Window " << i << " is " << (m_pWindows[i].m_bOpened ? "opened":"closed") << endl;
+		cout << "\t\t  Window " << i << " is " << (m_pWindows[i].m_bOpened ? "opened":"closed") << endl;
 	}
 }

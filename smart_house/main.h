@@ -20,7 +20,6 @@ bool IsNameAvailable(cString Name)
 				cout << "\nThere's already a house with the same name\n";
 				return false;
 			}
-
 		}
 	}
 	return true;

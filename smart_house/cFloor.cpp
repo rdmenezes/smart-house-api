@@ -23,12 +23,11 @@ void cFloor::AddRoom()
 }
 
 void cFloor::Print()
-{
-	
+{	
 	for(size_t i=0; i< m_pRooms.size();i++)
 	{
-		cout<<"\t{"<<endl;
+		cout<<"      {"<<endl;
 		m_pRooms[i].Print();
-		cout<<"\t}"<<endl;
+		cout<<"      }"<<endl;
 	}
 }
