@@ -27,6 +27,6 @@ int main ()
 	}
 	#ifdef _WIN32
 	system ("pause"); 
-#endif
+	#endif
 }
 
