@@ -65,6 +65,7 @@
     <ClInclude Include="cRoom.h" />
     <ClInclude Include="cString.h" />
     <ClInclude Include="cWindow.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cFloor.cpp" />
