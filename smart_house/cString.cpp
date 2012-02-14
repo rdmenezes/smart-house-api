@@ -39,9 +39,17 @@ cString::~cString()
 
 //=========================================================================//
 
-bool cString::GetString()
+bool cString::ReadLine(char* TextPrompt)
 {
 	char mBuff[200];
+	if (TextPrompt)
+	{
+		cout << TextPrompt << endl << ">";
+	}
+	else 
+	{
+		cout << ">";
+	}
 	if(cin.getline (mBuff, 200))
 	{
 		delete [] str;

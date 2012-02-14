@@ -30,13 +30,11 @@ bool IsNameAvailable(cString Name)
 void AddHouse()
 {
 	cString Name;
-	cout << "\nEnter your house name\n" << ">";
-	Name.GetString();
+	Name.ReadLine("Enter your house name");
 
 	while (Name == "")
 	{
-		cout << "\nEnter your house name\n" << ">";
-		Name.GetString();
+		Name.ReadLine("Enter your house name");
 	}
 
 	if (IsNameAvailable(Name))
@@ -52,9 +50,8 @@ void AddHouse()
 
 void DelHouse()
 {
-	cout << "\nEnter the house name you want to delete\n>";
 	cString Name;
-	Name.GetString();
+	Name.ReadLine("Enter the house name you want to delete");
 	if (rHouses.size() != 0)
 	{
 		for (size_t i = 0; i <= rHouses.size(); ++i)
@@ -87,4 +84,47 @@ void Print()
 			rHouses[i].Print();
 		}
 	}
+}
+
+//--------------------------------------------------------------------------------
+
+void AddRoom() 
+{
+	cString string;	
+	string.ReadLine("Enter the house you want to add a room to");
+	for (size_t i = 0; i < rHouses.size(); ++i)
+	{
+		if (rHouses[i].Name == string)
+		{
+			cout << "Enter the floor number you'd like to add a room to " << endl;
+			int n;
+			cin >> n; //corrupts next while iteration. replace with simething else.
+			rHouses[i].m_pFloors[n].AddRoom();
+		}
+	}
+}
+
+//--------------------------------------------------------------------------------
+
+void AddFloor()
+{
+	cString string;
+	string.ReadLine("Enter the house you want to add a floor to");
+	for (size_t i = 0; i < rHouses.size(); ++i)
+	{
+		if (rHouses[i].Name == string)
+		{
+			rHouses[i].AddFloor();
+		} 
+	}
+}
+
+//--------------------------------------------------------------------------------
+
+void PrintHelp()
+{
+	cout << "\"add house\" - add a house; " << endl <<
+		"\"delete house\" - deletes a house; " << endl <<
+		"\"print\" - prints all information about your house's configuration" << endl <<
+		"\"exit\" - exit from the application " << endl;
 }

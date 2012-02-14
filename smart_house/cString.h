@@ -17,5 +17,5 @@ public:
 	bool operator == (const char* string);
 	bool operator != (const char* string);
 	char*  str;
-	bool GetString();
+	bool ReadLine(char* TextPrompt = NULL);
 };
