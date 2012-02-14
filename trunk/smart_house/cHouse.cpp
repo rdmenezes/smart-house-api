@@ -39,8 +39,8 @@ void cHouse::Print()
 	cout << Name.str << "\n";
 	for (size_t i=0; i < m_pFloors.size(); i++)
 	{
-		cout << "   {" << endl;
+		cout << " " << i << endl << "  {" << endl;
 		m_pFloors[i].Print();
-		cout << "   }" << endl;
+		cout << "  }" << endl;
 	}
 }
