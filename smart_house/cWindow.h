@@ -1,4 +1,7 @@
 #pragma once
+#include "cString.h"
+#include "tinyxml.h"
+
 class cWindow
 {
 public:
@@ -7,7 +10,7 @@ public:
 
 	void Open();
 	void Close();
-
+	cString Serialize();
 	bool m_bOpened;
 };
 

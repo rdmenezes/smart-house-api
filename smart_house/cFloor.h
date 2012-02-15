@@ -1,6 +1,9 @@
 #pragma once
 #include "cRoom.h"
 #include <vector>
+#include "cString.h"
+#include "tinyxml.h"
+
 using namespace std;
 
 class cFloor
@@ -14,5 +17,6 @@ public:
 	void AddRoom(cRoom &room);
 	void AddRoom();
 	void Print();
+	cString Serialize();
 };
 

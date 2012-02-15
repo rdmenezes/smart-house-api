@@ -16,7 +16,6 @@ public:
 	bool operator != (cString string);
 	bool operator == (const char* string);
 	bool operator != (const char* string);
-
-	char  str[20];
-	bool GetString();
+	char*  str;
+	bool ReadLine(char* TextPrompt = NULL);
 };

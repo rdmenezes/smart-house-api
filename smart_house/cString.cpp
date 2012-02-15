@@ -2,12 +2,16 @@
 #include <string.h>
 cString::cString()
 {
+	str = 0;
 }
 
 //=========================================================================//
 
 cString::cString (char* string)
 {
+	if(!string)
+		return;
+	str = new char [strlen(string)+1];
 	for (size_t i=0; i <= strlen(string); i++)
 	{
 		str[i] = string[i];
@@ -18,10 +22,11 @@ cString::cString (char* string)
 
 cString::cString(const cString &copy)
 {
+	str = new char [strlen(copy.str)+1];
 	for (size_t i=0; i <= strlen(copy.str); i++)
 	{
 		str[i] = copy.str[i];
-	}
+	}	
 }
 
 
@@ -29,14 +34,30 @@ cString::cString(const cString &copy)
 
 cString::~cString()
 {
+	delete [] str;
 }
 
 //=========================================================================//
 
-bool cString::GetString()
+bool cString::ReadLine(char* TextPrompt)
 {
-	if(cin.getline (str, 20))
+	char mBuff[200];
+	if (TextPrompt)
 	{
+		cout << TextPrompt << endl << ">";
+	}
+	else 
+	{
+		cout << ">";
+	}
+	if(cin.getline (mBuff, 200))
+	{
+		delete [] str;
+		str = new char [strlen(mBuff)+1];
+		for (size_t i = 0; i <= strlen(mBuff); ++i)
+		{
+			str[i] = mBuff[i];
+		}
 		return true;
 	}
 	else
@@ -49,11 +70,13 @@ bool cString::GetString()
 
 cString& cString::operator = (const cString &copy)
 {
-		for (size_t i=0; i <= strlen(copy.str); i++)
-		{
-			str[i] = copy.str[i];
-		}
-		return *this;
+	delete [] str;
+	str = new char [strlen(copy.str)+1];
+	for (size_t i=0; i <= strlen(copy.str); i++)
+	{
+		str[i] = copy.str[i];
+	}
+	return *this;
 }
 
 //=========================================================================//
