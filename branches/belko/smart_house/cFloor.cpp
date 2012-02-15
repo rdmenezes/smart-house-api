@@ -23,12 +23,32 @@ void cFloor::AddRoom()
 }
 
 void cFloor::Print()
-{
-	
+{	
 	for(size_t i=0; i< m_pRooms.size();i++)
 	{
-		cout<<"\t{"<<endl;
+		cout<<"      {"<<endl;
 		m_pRooms[i].Print();
-		cout<<"\t}"<<endl;
+		cout<<"      }"<<endl;
 	}
+}
+
+cString cFloor::Serialize()
+{
+	cString rslt;
+	TiXmlDocument doc;
+	TiXmlPrinter printer;
+	TiXmlElement * txFloor = new TiXmlElement("floor");
+
+	for (size_t i = 0; i<m_pRooms.size(); ++i)
+	{
+		TiXmlDocument txRoom;
+		txRoom.Parse(m_pRooms[i].Serialize().str);
+		txFloor->InsertEndChild(*txRoom.RootElement());
+	}
+
+	doc.LinkEndChild(txFloor);
+	printer.SetIndent( "\t" );
+	doc.Accept( &printer );
+	rslt = cString((char*)printer.CStr());
+	return rslt;
 }

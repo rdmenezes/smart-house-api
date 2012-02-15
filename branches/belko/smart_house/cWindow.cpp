@@ -37,3 +37,19 @@ void cWindow::Close()
 		cout << "Windows is already closed" << endl;
 	}
 }
+
+cString cWindow::Serialize()
+{
+	cString rslt;
+	TiXmlDocument doc;
+	TiXmlPrinter printer;
+	TiXmlElement * txRoom = new TiXmlElement("room");
+	txRoom->SetAttribute("opened",m_bOpened?"true":"false");
+	
+
+	doc.LinkEndChild(txRoom);
+	printer.SetIndent( "\t" );
+	doc.Accept( &printer );
+	rslt = cString((char*)printer.CStr());
+	return rslt;
+}

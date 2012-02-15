@@ -41,6 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -60,13 +61,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\tinyxml\tinystr.h" />
+    <ClInclude Include="..\tinyxml\tinyxml.h" />
     <ClInclude Include="cFloor.h" />
     <ClInclude Include="cHouse.h" />
     <ClInclude Include="cRoom.h" />
     <ClInclude Include="cString.h" />
     <ClInclude Include="cWindow.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\tinyxml\tinystr.cpp" />
+    <ClCompile Include="..\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="..\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="cFloor.cpp" />
     <ClCompile Include="cHouse.cpp" />
     <ClCompile Include="cRoom.cpp" />

@@ -39,8 +39,33 @@ void cHouse::Print()
 	cout << Name.str << "\n";
 	for (size_t i=0; i < m_pFloors.size(); i++)
 	{
-		cout << "{" << endl;
+		cout << " " << i << endl << "  {" << endl;
 		m_pFloors[i].Print();
-		cout << "}" << endl;
+		cout << "  }" << endl;
 	}
+	Serialize();
+}
+
+cString cHouse::Serialize()
+{
+	cString rslt;
+	TiXmlDocument doc;
+	TiXmlPrinter printer;
+	TiXmlElement * txHouse = new TiXmlElement("house");
+	txHouse->SetAttribute("name",Name.str);
+
+	for (size_t i = 0; i<m_pFloors.size(); ++i)
+	{
+		TiXmlDocument txFloor;
+		txFloor.Parse(m_pFloors[i].Serialize().str);
+		txHouse->InsertEndChild(*txFloor.RootElement());
+	}
+	
+
+
+	doc.LinkEndChild(txHouse);
+	printer.SetIndent( "\t" );
+	doc.Accept( &printer );
+	rslt = cString((char*)printer.CStr());
+	return rslt;
 }

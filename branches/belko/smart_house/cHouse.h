@@ -2,6 +2,8 @@
 #include "vector"
 #include "cFloor.h"
 #include "cString.h"
+#include "tinyxml.h"
+
 using namespace std;
 
 class cHouse
@@ -14,6 +16,7 @@ public:
 	vector <cFloor> m_pFloors;
 	cString Name;
 
+	cString Serialize();
 	void AddFloor(cFloor &floor);
 	void AddFloor();
 	void Print();
