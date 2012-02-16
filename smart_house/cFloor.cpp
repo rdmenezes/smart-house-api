@@ -52,3 +52,18 @@ cString cFloor::Serialize()
 	rslt = cString((char*)printer.CStr());
 	return rslt;
 }
+
+void cFloor::Deserialize( cString data )
+{
+	TiXmlDocument doc;
+	doc.Parse(data.str);
+	for( TiXmlElement *txRoom = doc.FirstChildElement("floor")->FirstChildElement("room"); txRoom; txRoom = txRoom->NextSiblingElement("room") )
+	{
+		TiXmlPrinter printer;
+		txRoom->Accept(&printer);
+		printer.SetIndent( "\t" );
+
+		AddRoom();
+		m_pRooms[m_pRooms.size()-1].Deserialize(cString((char*)printer.CStr()));
+	}
+}

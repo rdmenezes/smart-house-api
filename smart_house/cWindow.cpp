@@ -53,3 +53,10 @@ cString cWindow::Serialize()
 	rslt = cString((char*)printer.CStr());
 	return rslt;
 }
+
+void cWindow::Deserialize( cString data )
+{
+	TiXmlDocument doc;
+	doc.Parse(data.str);
+	//TODO: parse window state
+}

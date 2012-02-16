@@ -29,6 +29,14 @@ int main ()
 		{
 			AddRoom();
 		}
+		else if (string == "save")
+		{
+			Save();
+		}
+		else if (string == "load")
+		{
+			Load();
+		}
 
 		else if (string == "help")
 		{

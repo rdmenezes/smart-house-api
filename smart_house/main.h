@@ -89,6 +89,46 @@ void Print()
 
 //--------------------------------------------------------------------------------
 
+void Save()
+{
+	TiXmlDocument doc;
+	for (size_t i = 0; i<rHouses.size(); ++i)
+	{
+		TiXmlDocument txHouse;
+		txHouse.Parse(rHouses[i].Serialize().str);
+		doc.InsertEndChild(*txHouse.RootElement());
+	}
+	doc.SaveFile("config.xml");
+}
+
+//--------------------------------------------------------------------------------
+
+void Load()
+{
+	TiXmlDocument *xml = new TiXmlDocument("config.xml" );
+	if( !xml->LoadFile() )
+	{
+		cout << "loading failed: can't load file" << endl;
+		return;
+	}
+
+	rHouses.clear();
+
+	TiXmlPrinter printer;
+	for( TiXmlElement *txHouse = xml->FirstChildElement("house"); txHouse; txHouse = txHouse->NextSiblingElement("house") )
+	{
+		txHouse->Accept(&printer);
+		printer.SetIndent( "\t" );
+		
+		cHouse house;
+		//house.Name = Name;
+		house.Deserialize(cString((char*)printer.CStr()));
+		rHouses.push_back(house);
+	}
+}
+
+//--------------------------------------------------------------------------------
+
 void AddRoom() 
 {
 	cString string;	

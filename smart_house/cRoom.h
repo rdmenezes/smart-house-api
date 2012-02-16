@@ -17,4 +17,5 @@ public:
 	void AddWindow();
 	void Print();
 	cString Serialize();
+	void Deserialize(cString data);
 };
