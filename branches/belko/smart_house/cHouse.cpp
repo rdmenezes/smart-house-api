@@ -43,7 +43,6 @@ void cHouse::Print()
 		m_pFloors[i].Print();
 		cout << "  }" << endl;
 	}
-	Serialize();
 }
 
 cString cHouse::Serialize()
@@ -60,7 +59,7 @@ cString cHouse::Serialize()
 		txFloor.Parse(m_pFloors[i].Serialize().str);
 		txHouse->InsertEndChild(*txFloor.RootElement());
 	}
-	
+
 
 
 	doc.LinkEndChild(txHouse);
@@ -68,4 +67,22 @@ cString cHouse::Serialize()
 	doc.Accept( &printer );
 	rslt = cString((char*)printer.CStr());
 	return rslt;
+}
+
+void cHouse::Deserialize( cString data )
+{
+	TiXmlDocument doc;
+	doc.Parse(data.str);
+	string name;
+	doc.FirstChildElement("house")->QueryStringAttribute("name",&name);
+	Name = (char*) name.c_str();
+	for( TiXmlElement *txFloor = doc.FirstChildElement("house")->FirstChildElement("floor"); txFloor; txFloor = txFloor->NextSiblingElement("floor") )
+	{
+		TiXmlPrinter printer;
+		txFloor->Accept(&printer);
+		printer.SetIndent( "\t" );
+
+		AddFloor();
+		m_pFloors[m_pFloors.size()-1].Deserialize(cString((char*)printer.CStr()));
+	}
 }

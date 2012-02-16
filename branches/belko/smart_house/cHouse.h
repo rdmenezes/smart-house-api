@@ -17,6 +17,7 @@ public:
 	cString Name;
 
 	cString Serialize();
+	void Deserialize(cString data);
 	void AddFloor(cFloor &floor);
 	void AddFloor();
 	void Print();

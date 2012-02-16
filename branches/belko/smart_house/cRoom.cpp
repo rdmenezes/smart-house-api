@@ -49,3 +49,18 @@ cString cRoom::Serialize()
 	rslt = cString((char*)printer.CStr());
 	return rslt;
 }
+
+void cRoom::Deserialize( cString data )
+{
+	TiXmlDocument doc;
+	doc.Parse(data.str);
+	for( TiXmlElement *txWindow = doc.FirstChildElement("room")->FirstChildElement("window"); txWindow; txWindow = txWindow->NextSiblingElement("window") )
+	{
+		TiXmlPrinter printer;
+		txWindow->Accept(&printer);
+		printer.SetIndent( "\t" );
+
+		AddWindow();
+		m_pWindows[m_pWindows.size()-1].Deserialize(cString((char*)printer.CStr()));
+	}
+}
