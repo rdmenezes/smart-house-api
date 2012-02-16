@@ -3,11 +3,14 @@ set (PROJECT SmartHouse)
 project (${PROJECT})
 
 set (HEADERS
+	smart_house/main.h
 	smart_house/cWindow.h
 	smart_house/cHouse.h
 	smart_house/cFloor.h
 	smart_house/cRoom.h
 	smart_house/cString.h
+	tinyxml/tinyxml.h
+	tinyxml/tinystr.h
 )
 set (SOURCES
 	smart_house/main.cpp
@@ -16,8 +19,13 @@ set (SOURCES
 	smart_house/cFloor.cpp
 	smart_house/cRoom.cpp
 	smart_house/cString.cpp
+	tinyxml/tinyxml.cpp
+	tinyxml/tinystr.cpp
+	tinyxml/tinyxmlerror.cpp
+	tinyxml/tinyxmlparser.cpp
 )
 
+include_directories(tinyxml)
 
 macro (add_app_executable BUILD_TYPE)
 	add_executable (${PROJECT}-${BUILD_TYPE} ${HEADERS} ${SOURCES})
