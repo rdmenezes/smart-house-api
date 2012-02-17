@@ -1,5 +1,7 @@
 #include "cString.h"
 #include <string.h>
+#include <stdlib.h>
+
 cString::cString()
 {
 	str = 0;
@@ -66,6 +68,12 @@ bool cString::ReadLine(char* TextPrompt)
 	}
 }
 
+//=========================================================================//
+
+int cString::ToInt()
+{
+	return atoi(str);
+}
 //=========================================================================//
 
 cString& cString::operator = (const cString &copy)
