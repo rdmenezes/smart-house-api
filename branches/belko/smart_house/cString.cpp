@@ -9,7 +9,7 @@ cString::cString()
 
 //=========================================================================//
 
-cString::cString (char* string)
+cString::cString (const char* string)
 {
 	if(!string)
 		return;
@@ -41,7 +41,7 @@ cString::~cString()
 
 //=========================================================================//
 
-bool cString::ReadLine(char* TextPrompt)
+bool cString::ReadLine(const char* TextPrompt)
 {
 	char mBuff[200];
 	if (TextPrompt)
