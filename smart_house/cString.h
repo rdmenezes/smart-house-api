@@ -7,7 +7,7 @@ class cString
 {
 public:
 	cString();
-	cString(char* Name);
+	cString(const char* Name);
 	cString(const cString &copy);
 	~cString();
 
@@ -17,6 +17,6 @@ public:
 	bool operator == (const char* string);
 	bool operator != (const char* string);
 	char*  str;
-	bool ReadLine(char* TextPrompt = NULL);
+	bool ReadLine(const char* TextPrompt = NULL);
 	int ToInt();
 };
