@@ -18,4 +18,5 @@ public:
 	bool operator != (const char* string);
 	char*  str;
 	bool ReadLine(char* TextPrompt = NULL);
+	int ToInt();
 };

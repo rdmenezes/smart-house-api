@@ -137,9 +137,9 @@ void AddRoom()
 	{
 		if (rHouses[i].Name == string)
 		{
-			cout << "Enter the floor number you'd like to add a room to " << endl;
 			int n;
-			cin >> n; //corrupts next while iteration. replace with simething else.
+			string.ReadLine("Enter the floor number you'd like to add a room to");
+			n = string.ToInt();
 			rHouses[i].m_pFloors[n].AddRoom();
 		}
 	}
@@ -166,6 +166,10 @@ void PrintHelp()
 {
 	cout << "\"add house\" - add a house; " << endl <<
 		"\"delete house\" - deletes a house; " << endl <<
+		"\"add floor \" - add a floor; " << endl <<
+		"\"add room \" - add a room; " << endl <<
+		"\"save \" - save all information about your house's configuration to file; " << endl <<
+		"\"load \" - load all information about your house's configuration to file; " << endl <<
 		"\"print\" - prints all information about your house's configuration" << endl <<
 		"\"exit\" - exit from the application " << endl;
 }
