@@ -136,3 +136,14 @@ bool cString::operator != (cString string)
 }
 
 //=========================================================================//
+
+int cString::ToInt()
+{
+	unsigned int result = 0;
+	for (size_t i=0; i < strlen(str); ++i)
+	{
+		result *= 10;
+		result +=str[i]-'0';
+	}
+	return result;
+}

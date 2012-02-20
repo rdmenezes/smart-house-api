@@ -97,9 +97,17 @@ void AddRoom()
 		if (rHouses[i].Name == string)
 		{
 			cout << "Enter the floor number you'd like to add a room to " << endl;
-			int n;
-			cin >> n; //corrupts next while iteration. replace with simething else.
-			rHouses[i].m_pFloors[n].AddRoom();
+			string.ReadLine();
+			unsigned int n = string.ToInt();
+			if (rHouses[i].m_pFloors.size() <= n)
+			{
+				cout << "Invalid floor\n";
+				return;
+			}
+			else
+			{
+				rHouses[i].m_pFloors[n].AddRoom();				
+			}			
 		}
 	}
 }
