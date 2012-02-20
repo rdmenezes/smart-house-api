@@ -2,10 +2,10 @@
 
 int main ()
 {
-	cString string;	
+	std::string string;	
 	cout << "\nWelcome to your Smart House Manager\n";
 
-	while ((string.ReadLine()) && (string != "exit"))
+	while ((string = GetStringFromSocket()) != "exit") //AS we don't have a Socket Client yet, use TCP/IP Bulder. Port 1234
 	{
 		if (string == "add house")
 		{			
