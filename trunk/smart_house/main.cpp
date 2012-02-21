@@ -8,7 +8,7 @@ int main ()
 	socket.Accept();
 	socket.PutString("Welcome to your Smart House Manager\n");
 	while (string.ReadLine(0, &socket) && string != "exit")
-	{
+	{		
 		if (string == "")
 		{
 			socket.Accept();
@@ -21,12 +21,12 @@ int main ()
 
 		else if (string == "delete house")
 		{
-			DelHouse();
+			DelHouse(&socket);
 		}
 
 		else if (string == "print")
 		{
-			Print();
+			Print(&socket);
 		}
 		else if (string == "add floor")
 		{
@@ -39,7 +39,11 @@ int main ()
 
 		else if (string == "help")
 		{
-			PrintHelp();
+			PrintHelp(&socket);
+		}
+		else if (string == "add window")
+		{
+			AddWindow(&socket);
 		}
 
 		else

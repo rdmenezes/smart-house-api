@@ -13,6 +13,6 @@ public:
 
 	void AddRoom(cRoom &room);
 	void AddRoom();
-	void Print();
+	void Print(cSocket* socket);
 };
 

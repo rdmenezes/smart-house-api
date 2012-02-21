@@ -65,9 +65,8 @@ bool cString::ReadLine(char* TextPrompt)
 	}
 }
 
-bool cString::ReadLine( char* TextPrompt, cSocket* Socket )
+bool cString::ReadLine(char* TextPrompt, cSocket* Socket)
 {
-
 	char mBuff[200];
 	if (TextPrompt)
 	{

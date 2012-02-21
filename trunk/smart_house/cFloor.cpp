@@ -22,12 +22,12 @@ void cFloor::AddRoom()
 	m_pRooms.push_back(room);
 }
 
-void cFloor::Print()
+void cFloor::Print(cSocket* socket)
 {	
 	for(size_t i=0; i< m_pRooms.size();i++)
 	{
-		cout<<"      {"<<endl;
-		m_pRooms[i].Print();
-		cout<<"      }"<<endl;
+		socket->PutString("      {\n");
+		m_pRooms[i].Print(socket);
+		socket->PutString("      }\n");
 	}
 }

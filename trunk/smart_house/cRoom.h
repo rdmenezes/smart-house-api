@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "cWindow.h"
+#include "cSocket.h"
 using namespace std;
 
 class cRoom
@@ -13,5 +14,5 @@ public:
 
 	void AddWindow(cWindow &window);
 	void AddWindow();
-	void Print();
+	void Print(cSocket* socket);
 };
