@@ -6,7 +6,7 @@ cString::cString()
 
 //=========================================================================//
 
-cString::cString (char* string)
+cString::cString (const char* string)
 {
 	if(!string)
 		return;
@@ -51,6 +51,36 @@ bool cString::ReadLine(char* TextPrompt)
 	{
 		cout << ">";
 	}
+	if(mBuff != NULL)
+	{
+		delete [] str;
+		str = new char [strlen(mBuff)+1];
+		for (size_t i = 0; i <= strlen(mBuff); ++i)
+		{
+			str[i] = mBuff[i];
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool cString::ReadLine( char* TextPrompt, cSocket* Socket )
+{
+
+	char mBuff[200];
+	if (TextPrompt)
+	{
+		cout << TextPrompt << endl << ">";
+	}
+	else 
+	{
+		cout << ">";
+	}
+	std::string sTemp = Socket->GetString();
+	std::copy(sTemp.begin(),sTemp.end(), mBuff);
 	if(mBuff != NULL)
 	{
 		delete [] str;

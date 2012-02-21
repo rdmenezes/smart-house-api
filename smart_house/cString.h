@@ -1,7 +1,6 @@
 #pragma once
 #include "iostream"
-#include "winsock2.h"
-#include "string"
+#include "cSocket.h"
 
 using namespace std;
 
@@ -9,7 +8,7 @@ class cString
 {
 public:
 	cString();
-	cString(char* Name);
+	cString(const char* Name);
 	cString(const cString &copy);
 	~cString();
 
@@ -20,6 +19,6 @@ public:
 	bool operator != (const char* string);
 	char*  str;
 	bool ReadLine(char* TextPrompt = NULL);
+	bool ReadLine(char* TextPrompt, cSocket* Socket);
 	int ToInt();
-	std::string GetStringFromSocket ();
 };

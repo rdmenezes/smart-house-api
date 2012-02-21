@@ -4,12 +4,18 @@ int main ()
 {
 	cString string;	
 	cout << "\nWelcome to your Smart House Manager\n";
-
-	while (string.ReadLine())//((string = GetStringFromSocket()) != "exit") //AS we don't have a Socket Client yet, use TCP/IP Bulder. Port 1234
+	cSocket socket;
+	socket.Accept();
+	while (string.ReadLine("Enter command", &socket) && string != "exit")
 	{
+		if (string == "")
+		{
+			socket.Accept();
+			continue;
+		}
 		if (string == "add house")
 		{			
-			AddHouse();
+			AddHouse(&socket);
 		}
 
 		else if (string == "delete house")
@@ -23,11 +29,11 @@ int main ()
 		}
 		else if (string == "add floor")
 		{
-			AddFloor();
+			AddFloor(&socket);
 		}
 		else if (string == "add room")
 		{
-			AddRoom();
+			AddRoom(&socket);
 		}
 
 		else if (string == "help")
@@ -40,6 +46,7 @@ int main ()
 			cout << "You've entered unknown command " << endl;
 		}
 	}
+
 	#ifdef _WIN32
 	system ("pause"); 
 	#endif
