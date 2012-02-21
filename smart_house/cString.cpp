@@ -71,11 +71,12 @@ bool cString::ReadLine( char* TextPrompt, cSocket* Socket )
 	char mBuff[200];
 	if (TextPrompt)
 	{
-		cout << TextPrompt << endl << ">";
+		Socket->PutString(TextPrompt);
+		Socket->PutString("\n>");
 	}
 	else 
 	{
-		cout << ">";
+		Socket->PutString(">");
 	}
 	std::string sTemp = Socket->GetString();
 	std::copy(sTemp.begin(),sTemp.end(), mBuff);
