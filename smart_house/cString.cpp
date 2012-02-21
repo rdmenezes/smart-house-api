@@ -191,7 +191,15 @@ std::string cString::GetStringFromSocket ()
 		{
 			string.push_back(str[i]);
 		}
-		else break;
+		else 
+		{
+			string.push_back(NULL);
+			break;
+		}
 	}
+	closesocket(ClientSocket);
+	closesocket(ServerSocket);
+
+	WSACleanup();
 	return string;
 }
