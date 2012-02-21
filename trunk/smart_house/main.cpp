@@ -6,7 +6,7 @@ int main ()
 	cout << "\nWelcome to your Smart House Manager\n";
 	cSocket socket;
 	socket.Accept();
-	while (string.ReadLine("Enter command", &socket) && string != "exit")
+	while (string.ReadLine(0, &socket) && string != "exit")
 	{
 		if (string == "")
 		{
