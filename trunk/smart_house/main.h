@@ -44,7 +44,9 @@ void AddHouse(cSocket* Socket)
 		cHouse house;
 		house.Name = Name;
 		rHouses.push_back(house);
-		cout << "\nYou've created a House \"" << Name.str << "\"" << endl;
+		Socket->PutString("You've created a house ");
+		Socket->PutString(Name.str);
+		Socket->PutString("\n");
 	}
 }
 

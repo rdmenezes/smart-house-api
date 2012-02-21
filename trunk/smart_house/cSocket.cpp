@@ -46,6 +46,11 @@ std::string cSocket::GetString()
 		else 
 		{
 			string.push_back(NULL);
+			if (string.length() == 1)
+			{
+				this->Accept();
+				return GetString();
+			}
 			return string;
 		}
 	}
@@ -57,4 +62,7 @@ int cSocket::Accept()
 	return ClientSocket;
 }
 
-
+void cSocket::PutString(const char* string)
+{
+	send(ClientSocket,&string[0],strlen(string),0);
+}

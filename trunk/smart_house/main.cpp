@@ -3,9 +3,10 @@
 int main ()
 {
 	cString string;	
-	cout << "\nWelcome to your Smart House Manager\n";
+	//cout << "\nWelcome to your Smart House Manager\n";
 	cSocket socket;
 	socket.Accept();
+	socket.PutString("Welcome to your Smart House Manager\n");
 	while (string.ReadLine(0, &socket) && string != "exit")
 	{
 		if (string == "")

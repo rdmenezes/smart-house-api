@@ -23,5 +23,6 @@ public:
 	char str[1024];
 
 	std::string GetString();
+	void PutString(const char* string);
 	int cSocket::Accept();
 };
