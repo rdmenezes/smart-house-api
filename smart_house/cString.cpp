@@ -1,5 +1,4 @@
 #include "cString.h"
-#include <string.h>
 cString::cString()
 {
 	str = 0;
@@ -42,6 +41,8 @@ cString::~cString()
 bool cString::ReadLine(char* TextPrompt)
 {
 	char mBuff[200];
+	std::string sTemp = GetStringFromSocket();
+	std::copy(sTemp.begin(),sTemp.end(), mBuff);
 	if (TextPrompt)
 	{
 		cout << TextPrompt << endl << ">";
@@ -50,7 +51,7 @@ bool cString::ReadLine(char* TextPrompt)
 	{
 		cout << ">";
 	}
-	if(cin.getline (mBuff, 200))
+	if(mBuff != NULL)
 	{
 		delete [] str;
 		str = new char [strlen(mBuff)+1];
@@ -146,4 +147,51 @@ int cString::ToInt()
 		result +=str[i]-'0';
 	}
 	return result;
+}
+
+
+std::string cString::GetStringFromSocket ()
+{
+	char buffer[1024];
+	int ServerSocket;
+	WORD SocketVersion = MAKEWORD(2,2);
+	WSAStartup (SocketVersion,(WSADATA *) &buffer[0]);
+	
+	ServerSocket = socket (AF_INET, SOCK_STREAM, 0);
+
+	sockaddr_in LocalAddr;
+	LocalAddr.sin_family = AF_INET;
+	LocalAddr.sin_port = htons(1234);
+	LocalAddr.sin_addr.s_addr = 0;
+
+	int result = bind(ServerSocket,(sockaddr *) &LocalAddr, sizeof(LocalAddr));
+	int result1 = listen(ServerSocket, 100);
+
+	SOCKET ClientSocket;
+    sockaddr_in ClientSocketAddr;
+	int ClientSocketAddrSize = sizeof(ClientSocketAddr);
+	ClientSocket=accept(ServerSocket, (sockaddr *) &ClientSocketAddr, &ClientSocketAddrSize);
+	char str[1024];
+
+	char buff[1024];
+	std::string string;
+	int Bites_receaved = recv(ClientSocket,&buff[0],sizeof(buff),0);
+	for (size_t i =0; i <= Bites_receaved+1; ++i)
+	{
+		if (i<=Bites_receaved)
+		{
+			str[i] = buff[i];
+		}
+		else str[i-1] = '0';
+	}
+	
+	for (size_t i = 0; i < sizeof(buff);i++)
+	{
+		if (str[i] != '0')
+		{
+			string.push_back(str[i]);
+		}
+		else break;
+	}
+	return string;
 }
