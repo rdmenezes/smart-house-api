@@ -4,8 +4,8 @@
 #include "cRoom.h"
 #include "cFloor.h"
 #include "cString.h"
-#include "string"
-#include "winsock2.h"
+#include "cSocket.h"
+
 
 using namespace std;
 
@@ -29,14 +29,14 @@ bool IsNameAvailable(cString Name)
 
 //--------------------------------------------------------------------------------
 
-void AddHouse()
+void AddHouse(cSocket* Socket)
 {
 	cString Name;
-	Name.ReadLine("Enter your house name");
+	Name.ReadLine("Enter your house name", Socket);
 
 	while (Name == "")
 	{
-		Name.ReadLine("Enter your house name");
+		Name.ReadLine("Enter your house name", Socket);
 	}
 
 	if (IsNameAvailable(Name))
@@ -90,16 +90,15 @@ void Print()
 
 //--------------------------------------------------------------------------------
 
-void AddRoom() 
+void AddRoom(cSocket* socket) 
 {
 	cString string;	
-	string.ReadLine("Enter the house you want to add a room to");
+	string.ReadLine("Enter the house you want to add a room to", socket);
 	for (size_t i = 0; i < rHouses.size(); ++i)
 	{
 		if (rHouses[i].Name == string)
 		{
-			cout << "Enter the floor number you'd like to add a room to " << endl;
-			string.ReadLine();
+			string.ReadLine("Enter the floor number you'd like to add a room to", socket);
 			unsigned int n = string.ToInt();
 			if (rHouses[i].m_pFloors.size() <= n)
 			{
@@ -116,10 +115,10 @@ void AddRoom()
 
 //--------------------------------------------------------------------------------
 
-void AddFloor()
+void AddFloor(cSocket* socket)
 {
 	cString string;
-	string.ReadLine("Enter the house you want to add a floor to");
+	string.ReadLine("Enter the house you want to add a floor to", socket);
 	for (size_t i = 0; i < rHouses.size(); ++i)
 	{
 		if (rHouses[i].Name == string)
@@ -137,50 +136,4 @@ void PrintHelp()
 		"\"delete house\" - deletes a house; " << endl <<
 		"\"print\" - prints all information about your house's configuration" << endl <<
 		"\"exit\" - exit from the application " << endl;
-}
-
-std::string GetStringFromSocket ()
-{
-	char buffer[1024];
-	int ServerSocket;
-	WORD SocketVersion = MAKEWORD(2,2);
-	WSAStartup (SocketVersion,(WSADATA *) &buffer[0]);
-	
-	ServerSocket = socket (AF_INET, SOCK_STREAM, 0);
-
-	sockaddr_in LocalAddr;
-	LocalAddr.sin_family = AF_INET;
-	LocalAddr.sin_port = htons(1234);
-	LocalAddr.sin_addr.s_addr = 0;
-
-	int result = bind(ServerSocket,(sockaddr *) &LocalAddr, sizeof(LocalAddr));
-	int result1 = listen(ServerSocket, 100);
-
-	SOCKET ClientSocket;
-    sockaddr_in ClientSocketAddr;
-	int ClientSocketAddrSize = sizeof(ClientSocketAddr);
-	ClientSocket=accept(ServerSocket, (sockaddr *) &ClientSocketAddr, &ClientSocketAddrSize);
-	char str[1024];
-
-	char buff[1024];
-	std::string string;
-	int Bites_receaved = recv(ClientSocket,&buff[0],sizeof(buff),0);
-	for (size_t i =0; i <= Bites_receaved+1; ++i)
-	{
-		if (i<=Bites_receaved)
-		{
-			str[i] = buff[i];
-		}
-		else str[i-1] = '0';
-	}
-	
-	for (size_t i = 0; i < sizeof(buff);i++)
-	{
-		if (str[i] != '0')
-		{
-			string.push_back(str[i]);
-		}
-		else break;
-	}
-	return string;
 }

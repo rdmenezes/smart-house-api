@@ -64,6 +64,7 @@
     <ClInclude Include="cFloor.h" />
     <ClInclude Include="cHouse.h" />
     <ClInclude Include="cRoom.h" />
+    <ClInclude Include="cSocket.h" />
     <ClInclude Include="cString.h" />
     <ClInclude Include="cWindow.h" />
     <ClInclude Include="main.h" />
@@ -72,6 +73,7 @@
     <ClCompile Include="cFloor.cpp" />
     <ClCompile Include="cHouse.cpp" />
     <ClCompile Include="cRoom.cpp" />
+    <ClCompile Include="cSocket.cpp" />
     <ClCompile Include="cString.cpp" />
     <ClCompile Include="cWindow.cpp" />
     <ClCompile Include="main.cpp" />
