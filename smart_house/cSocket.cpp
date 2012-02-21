@@ -66,3 +66,18 @@ void cSocket::PutString(const char* string)
 {
 	send(ClientSocket,&string[0],strlen(string),0);
 }
+
+void cSocket::PutString(std::string string)
+{
+	send(ClientSocket,&string[0],string.length(),0);
+}
+
+void cSocket::PutStringFormated(const char * format, ...)
+{
+        char xbuf[128]; 
+        va_list arg_list;
+        va_start(arg_list, format);
+        vsprintf(xbuf, format, arg_list);
+        va_end(arg_list);
+		send(ClientSocket,&xbuf[0],strlen(xbuf),0);
+}

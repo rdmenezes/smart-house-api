@@ -2,6 +2,7 @@
 #include "vector"
 #include "cFloor.h"
 #include "cString.h"
+#include "cSocket.h"
 using namespace std;
 
 class cHouse
@@ -16,6 +17,6 @@ public:
 
 	void AddFloor(cFloor &floor);
 	void AddFloor();
-	void Print();
+	void Print(cSocket* socket);
 };
 

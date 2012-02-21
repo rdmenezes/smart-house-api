@@ -21,10 +21,10 @@ void cRoom::AddWindow()
 	m_pWindows.push_back(cWindow());
 }
 
-void cRoom::Print()
+void cRoom::Print(cSocket* socket)
 {
 	for (size_t i=0; i < m_pWindows.size(); i++)
 	{
-		cout << "\t\t  Window " << i << " is " << (m_pWindows[i].m_bOpened ? "opened":"closed") << endl;
+		socket->PutStringFormated("\t  Window %d is %s\n",i,(m_pWindows[i].m_bOpened ? "opened":"closed"));
 	}
 }

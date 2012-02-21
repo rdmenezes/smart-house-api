@@ -52,10 +52,10 @@ void AddHouse(cSocket* Socket)
 
 //--------------------------------------------------------------------------------
 
-void DelHouse()
+void DelHouse(cSocket* socket)
 {
 	cString Name;
-	Name.ReadLine("Enter the house name you want to delete");
+	Name.ReadLine("Enter the house name you want to delete", socket);
 	if (rHouses.size() != 0)
 	{
 		for (size_t i = 0; i <= rHouses.size(); ++i)
@@ -78,14 +78,14 @@ void DelHouse()
 
 //--------------------------------------------------------------------------------
 
-void Print()
+void Print(cSocket* socket)
 {
-	cout << "\nYou Smart-House objects:" << endl;
+	socket->PutString("\nYou Smart-House objects:\n");
 	if (rHouses.size() != 0)
 	{
 		for (size_t i=0; i < rHouses.size(); ++i)
 		{
-			rHouses[i].Print();
+			rHouses[i].Print(socket);
 		}
 	}
 }
@@ -115,6 +115,40 @@ void AddRoom(cSocket* socket)
 	}
 }
 
+void AddWindow(cSocket* socket) 
+{
+	cString string;	
+	string.ReadLine("Enter the house you want to add a window to", socket);
+	for (size_t i = 0; i < rHouses.size(); ++i)
+	{
+		if (rHouses[i].Name == string)
+		{
+			string.ReadLine("Enter the floor number you'd like to add a window to", socket);
+			unsigned int n = string.ToInt();
+			if (rHouses[i].m_pFloors.size() <= n)
+			{
+				cout << "Invalid floor\n";
+				return;
+			}
+			else
+			{
+				string.ReadLine("Enter the room number you'd like to add a window to", socket);
+				unsigned int k = string.ToInt();
+				if (rHouses[i].m_pFloors[n].m_pRooms.size() <= k)
+				{
+					socket->PutString("Invalid room\n");
+					return;
+				}
+				else
+				{
+					rHouses[i].m_pFloors[n].m_pRooms[k].AddWindow();
+					socket->PutString("Window is added\n");
+				}
+			}			
+		}
+	}
+}
+
 //--------------------------------------------------------------------------------
 
 void AddFloor(cSocket* socket)
@@ -132,10 +166,7 @@ void AddFloor(cSocket* socket)
 
 //--------------------------------------------------------------------------------
 
-void PrintHelp()
+void PrintHelp(cSocket* socket)
 {
-	cout << "\"add house\" - add a house; " << endl <<
-		"\"delete house\" - deletes a house; " << endl <<
-		"\"print\" - prints all information about your house's configuration" << endl <<
-		"\"exit\" - exit from the application " << endl;
+	socket->PutString("\"add house\" - add a house;\n\"delete house\" - deletes a house;\n\"print\" - prints all information about your house's configuration\n\"exit\" - exit from the application\n");
 }

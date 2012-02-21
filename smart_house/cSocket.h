@@ -24,5 +24,7 @@ public:
 
 	std::string GetString();
 	void PutString(const char* string);
+	void PutString(std::string string);
+	void PutStringFormated(const char * format, ...);
 	int cSocket::Accept();
 };
