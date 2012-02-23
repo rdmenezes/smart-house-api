@@ -34,15 +34,16 @@ void cHouse::AddFloor()
 	m_pFloors.push_back(cFloor());
 }
 
-void cHouse::Print(cSocket* socket)
+void cHouse::Print(int socket)
 {
-	socket->PutString(Name.str);
-	socket->PutString("\n");
+	cString s;
+	s.PutString(socket, Name.str);
+	s.PutString(socket, "\n");
 	for (size_t i=0; i < m_pFloors.size(); i++)
 	{
-		socket->PutStringFormated(" %d\n  {\n", i);
+		s.PutStringFormated(socket, " %d\n  {\n", i);
 		m_pFloors[i].Print(socket);
-		socket->PutString("  }\n");
+		s.PutString(socket, "  }\n");
 	}
 }
 

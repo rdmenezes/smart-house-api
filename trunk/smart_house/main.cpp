@@ -1,58 +1,64 @@
 #include "main.h"
-
+DWORD WINAPI HandleClients(LPVOID Client);
 int main ()
 {
-	cString string;	
 	//cout << "\nWelcome to your Smart House Manager\n";
 	cSocket socket;
-	socket.Accept();
-	socket.PutString("Welcome to your Smart House Manager\n");
-	while (string.ReadLine(0, &socket) && string != "exit")
+	int Client;
+	while((Client = socket.Accept()) != -1)
+	{
+		DWORD thID;
+		CreateThread(NULL,NULL,HandleClients,&Client,NULL,&thID);
+	}
+}
+
+DWORD WINAPI HandleClients(LPVOID cl)
+{
+	SOCKET Client;
+	Client = ((SOCKET *) cl)[0];
+	cString string;	
+	string.PutString(Client,"Welcome to your Smart-House Manager!\n>");
+	while (string.ReadLine("", Client) && string != "exit")
 	{		
-		if (string == "")
-		{
-			socket.Accept();
-			continue;
-		}
 		if (string == "add house")
 		{			
-			AddHouse(&socket);
+			AddHouse(Client);
 		}
 
 		else if (string == "delete house")
 		{
-			DelHouse(&socket);
+			DelHouse(Client);
 		}
 
 		else if (string == "print")
 		{
-			Print(&socket);
+			Print(Client);
 		}
 		else if (string == "add floor")
 		{
-			AddFloor(&socket);
+			AddFloor(Client);
 		}
 		else if (string == "add room")
 		{
-			AddRoom(&socket);
+			AddRoom(Client);
 		}
 
 		else if (string == "help")
 		{
-			PrintHelp(&socket);
+			PrintHelp(Client);
 		}
 		else if (string == "add window")
 		{
-			AddWindow(&socket);
+			AddWindow(Client);
 		}
 
 		else
 		{
-			cout << "You've entered unknown command " << endl;
+			string.PutString(Client,"You've entered unknown command \n>");
+			break;
 		}
+		string.PutString(Client, "");
 	}
 
-	#ifdef _WIN32
-	system ("pause"); 
-	#endif
+	return 0;
 }

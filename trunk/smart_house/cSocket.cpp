@@ -23,61 +23,8 @@ cSocket::~cSocket()
 	WSACleanup();
 }
 
-std::string cSocket::GetString()
-{
-	std::string string;
-	Bites_receaved = recv(ClientSocket,&buff[0],sizeof(buff),0);
-		
-	for (size_t i = 0; i <= Bites_receaved+1; ++i)
-	{
-		if (i<=Bites_receaved)
-		{
-			str[i] = buff[i];
-		}
-		else str[i-1] = 0;
-	}
-
-	for (size_t i = 0; i < sizeof(buff);i++)
-	{
-		if (str[i] != 0 && str[i] != 10)
-		{
-			string.push_back(str[i]);
-		}
-		else 
-		{
-			string.push_back(NULL);
-			if (string.length() == 1)
-			{
-				this->Accept();
-				return GetString();
-			}
-			return string;
-		}
-	}
-}
-
 int cSocket::Accept()
 {
 	ClientSocket = accept(ServerSocket, (sockaddr *) &ClientSocketAddr, &ClientSocketAddrSize);
 	return ClientSocket;
-}
-
-void cSocket::PutString(const char* string)
-{
-	send(ClientSocket,&string[0],strlen(string),0);
-}
-
-void cSocket::PutString(std::string string)
-{
-	send(ClientSocket,&string[0],string.length(),0);
-}
-
-void cSocket::PutStringFormated(const char * format, ...)
-{
-        char xbuf[128]; 
-        va_list arg_list;
-        va_start(arg_list, format);
-        vsprintf(xbuf, format, arg_list);
-        va_end(arg_list);
-		send(ClientSocket,&xbuf[0],strlen(xbuf),0);
 }

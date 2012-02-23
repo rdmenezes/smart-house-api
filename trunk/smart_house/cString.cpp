@@ -65,19 +65,20 @@ bool cString::ReadLine(char* TextPrompt)
 	}
 }
 
-bool cString::ReadLine(char* TextPrompt, cSocket* Socket)
+bool cString::ReadLine(char* TextPrompt, int socket)
 {
 	char mBuff[200];
 	if (TextPrompt)
 	{
-		Socket->PutString(TextPrompt);
-		Socket->PutString("\n>");
+		send(socket,&TextPrompt[0],strlen(TextPrompt),0);
+		send(socket,"\n>",1,0);
 	}
 	else 
 	{
-		Socket->PutString(">");
+		send(socket,"\n>",1,0);
 	}
-	std::string sTemp = Socket->GetString();
+
+	std::string sTemp = GetStringFromSocket(socket);
 	std::copy(sTemp.begin(),sTemp.end(), mBuff);
 	if(mBuff != NULL)
 	{
@@ -175,4 +176,55 @@ int cString::ToInt()
 		result +=str[i]-'0';
 	}
 	return result;
+}
+
+
+std::string cString::GetStringFromSocket(int socket)
+{
+	std::string string;
+	Bites_receaved = recv(socket,&buff[0],sizeof(buff),0);
+	str = new char [Bites_receaved+1];
+	for (size_t i = 0; i <= Bites_receaved+1; ++i)
+	{
+		if (i<=Bites_receaved)
+		{
+			str[i] = buff[i];
+		}
+		else str[i-1] = 0;
+	}
+
+	for (size_t i = 0; i < sizeof(buff);i++)
+	{
+		if (str[i] != 0 && str[i] != 10)
+		{
+			string.push_back(str[i]);
+		}
+		else 
+		{
+			string.push_back(NULL);
+			return string;
+		}
+	}
+}
+
+
+
+void cString::PutString(int ClientSocket, const char* string)
+{
+	send(ClientSocket,&string[0],strlen(string),0);
+}
+
+void cString::PutString(int ClientSocket, std::string string)
+{
+	send(ClientSocket,&string[0],string.length(),0);
+}
+
+void cString::PutStringFormated(int ClientSocket, const char * format, ...)
+{
+        char xbuf[128]; 
+        va_list arg_list;
+        va_start(arg_list, format);
+        vsprintf(xbuf, format, arg_list);
+        va_end(arg_list);
+		send(ClientSocket,&xbuf[0],strlen(xbuf),0);
 }
