@@ -1,5 +1,6 @@
 #include "cFloor.h"
 #include "iostream"
+#include "cString.h"
 using namespace std;
 
 cFloor::cFloor()
@@ -22,12 +23,13 @@ void cFloor::AddRoom()
 	m_pRooms.push_back(room);
 }
 
-void cFloor::Print(cSocket* socket)
+void cFloor::Print(int socket)
 {	
 	for(size_t i=0; i< m_pRooms.size();i++)
 	{
-		socket->PutString("      {\n");
+		cString s;
+		s.PutString(socket, "      {\n");
 		m_pRooms[i].Print(socket);
-		socket->PutString("      }\n");
+		s.PutString(socket, "      }\n");
 	}
 }

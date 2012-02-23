@@ -29,7 +29,7 @@ bool IsNameAvailable(cString Name)
 
 //--------------------------------------------------------------------------------
 
-void AddHouse(cSocket* Socket)
+void AddHouse(int Socket)
 {
 	cString Name;
 	Name.ReadLine("Enter your house name", Socket);
@@ -44,15 +44,15 @@ void AddHouse(cSocket* Socket)
 		cHouse house;
 		house.Name = Name;
 		rHouses.push_back(house);
-		Socket->PutString("You've created a house ");
-		Socket->PutString(Name.str);
-		Socket->PutString("\n");
+		Name.PutString(Socket, "You've created a house ");
+		Name.PutString(Socket, Name.str);
+		Name.PutString(Socket, "\n");
 	}
 }
 
 //--------------------------------------------------------------------------------
 
-void DelHouse(cSocket* socket)
+void DelHouse(int socket)
 {
 	cString Name;
 	Name.ReadLine("Enter the house name you want to delete", socket);
@@ -78,9 +78,10 @@ void DelHouse(cSocket* socket)
 
 //--------------------------------------------------------------------------------
 
-void Print(cSocket* socket)
+void Print(int socket)
 {
-	socket->PutString("\nYou Smart-House objects:\n");
+	cString Header;
+	Header.PutString(socket, "\nYou Smart-House objects:\n");
 	if (rHouses.size() != 0)
 	{
 		for (size_t i=0; i < rHouses.size(); ++i)
@@ -92,7 +93,7 @@ void Print(cSocket* socket)
 
 //--------------------------------------------------------------------------------
 
-void AddRoom(cSocket* socket) 
+void AddRoom(int socket) 
 {
 	cString string;	
 	string.ReadLine("Enter the house you want to add a room to", socket);
@@ -115,7 +116,7 @@ void AddRoom(cSocket* socket)
 	}
 }
 
-void AddWindow(cSocket* socket) 
+void AddWindow(int socket) 
 {
 	cString string;	
 	string.ReadLine("Enter the house you want to add a window to", socket);
@@ -136,13 +137,13 @@ void AddWindow(cSocket* socket)
 				unsigned int k = string.ToInt();
 				if (rHouses[i].m_pFloors[n].m_pRooms.size() <= k)
 				{
-					socket->PutString("Invalid room\n");
+					string.PutString(socket, "Invalid room\n");
 					return;
 				}
 				else
 				{
 					rHouses[i].m_pFloors[n].m_pRooms[k].AddWindow();
-					socket->PutString("Window is added\n");
+					string.PutString(socket, "Window is added\n");
 				}
 			}			
 		}
@@ -151,7 +152,7 @@ void AddWindow(cSocket* socket)
 
 //--------------------------------------------------------------------------------
 
-void AddFloor(cSocket* socket)
+void AddFloor(int socket)
 {
 	cString string;
 	string.ReadLine("Enter the house you want to add a floor to", socket);
@@ -166,7 +167,8 @@ void AddFloor(cSocket* socket)
 
 //--------------------------------------------------------------------------------
 
-void PrintHelp(cSocket* socket)
+void PrintHelp(int socket)
 {
-	socket->PutString("\"add house\" - add a house;\n\"delete house\" - deletes a house;\n\"print\" - prints all information about your house's configuration\n\"exit\" - exit from the application\n");
+	cString s;
+	s.PutString(socket, "\"add house\" - add a house;\n\"delete house\" - deletes a house;\n\"print\" - prints all information about your house's configuration\n\"exit\" - exit from the application\n");
 }

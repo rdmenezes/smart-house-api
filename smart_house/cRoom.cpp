@@ -1,5 +1,5 @@
 #include "cRoom.h"
-#include "iostream"
+
 using namespace std;
 
 cRoom::cRoom()
@@ -21,10 +21,11 @@ void cRoom::AddWindow()
 	m_pWindows.push_back(cWindow());
 }
 
-void cRoom::Print(cSocket* socket)
+void cRoom::Print(int socket)
 {
+	cString s;
 	for (size_t i=0; i < m_pWindows.size(); i++)
 	{
-		socket->PutStringFormated("\t  Window %d is %s\n",i,(m_pWindows[i].m_bOpened ? "opened":"closed"));
+		s.PutStringFormated(socket, "\t  Window %d is %s\n",i,(m_pWindows[i].m_bOpened ? "opened":"closed"));
 	}
 }

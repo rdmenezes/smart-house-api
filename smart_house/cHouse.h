@@ -17,6 +17,6 @@ public:
 
 	void AddFloor(cFloor &floor);
 	void AddFloor();
-	void Print(cSocket* socket);
+	void Print(int socket);
 };
 
