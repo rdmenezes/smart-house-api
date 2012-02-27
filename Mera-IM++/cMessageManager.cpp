@@ -83,10 +83,9 @@ cMessageManager::MessageType cMessageManager::ProcessMessageType()
 {
 	switch (buffer[0])
 	{
-		case '0': {LoginRequest; return LoginRequest;}
-		case '1': {LogoutRequest; return LogoutRequest;}
-		case '2': {IM; return IM;}
-		case '3': {StatusChanged; return StatusChanged;}
+		case '0': {return LoginRequest;}
+		case '1': {return LogoutRequest;}
+		case '2': {return IM;}
+		case '3': {return StatusChanged;}
 	}
-
 }
