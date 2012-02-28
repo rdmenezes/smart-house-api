@@ -60,18 +60,27 @@ SOCKET cMessageManager::GetClient()
 
 void cMessageManager::ProcessDialog(SOCKET Client)
 {
-	char DialogLength[3];
-	recv(Client,&DialogLength[0],sizeof(DialogLength),0);
+	cClient User;
+	
+	char DialogLength[4];
+	int Bytesrecv;
+	if ((Bytesrecv = recv(Client,&DialogLength[0],sizeof(DialogLength),0)) > 3)
+	{
+		return;
+	}
+
 	int n = atoi(DialogLength);
-	buffer = new char [n+1];
+	char* buffer = new char [n+1];
+	
 	recv(Client,&buffer[0],n,0);
 	buffer[n] = 0;
 	
-	MessageType Type;
-	Type = ProcessMessageType();
+	eMessageType Type;
+	Type = ProcessMessageType(buffer[0]);
 
 	switch (Type)
 	{
+		case RegisterRequest: {ProcessRegisterRequest(Client,buffer);break;}
 		case LoginRequest: { send(Client,"Login Request\n",strlen("Login Request\n"),0);break;}
 		case LogoutRequest: {send(Client,"Logout Request\n",strlen("Logout Request\n"),0);break;}
 		case IM: {send(Client,"IM\n",strlen("IM\n"),0);break;}
@@ -79,13 +88,56 @@ void cMessageManager::ProcessDialog(SOCKET Client)
 	}
 }
 
-cMessageManager::MessageType cMessageManager::ProcessMessageType()
+eMessageType cMessageManager::ProcessMessageType(char x)
 {
-	switch (buffer[0])
+	return (eMessageType)(x-'0');
+}
+
+bool cMessageManager::ProcessRegisterRequest(SOCKET Client, char* buffer)
+{
+	//cClient User;
+	std::string Username,Password;
+	//As we know, that message format Register Request is "0,username,password",
+	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
+	
+	size_t i = 2;
+	while (buffer[i] != ',')
 	{
-		case '0': {return LoginRequest;}
-		case '1': {return LogoutRequest;}
-		case '2': {return IM;}
-		case '3': {return StatusChanged;}
+		Username.push_back(buffer[i]);
+		i++;
 	}
+	i++;
+	while (buffer[i] != 10) // Replace with 0 after client application is done.
+	{
+		Password.push_back(buffer[i]);
+		i++;
+	}
+
+
+	if (!IsUserRegistered(Username))
+	{
+		//User.SetSocketID(Client);
+		//User.SetUserName(Username);
+		//User.SetUserPassword(Password);
+		//ClientsList.Insert(&User);
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+bool cMessageManager::IsUserRegistered(std::string Username)
+{
+	cClient* Client = ClientsList.Begin();
+	while(Client->Next)
+	{
+		//if (Client->GetUserName() == Username)
+		{
+			return true;
+		}
+	}
+	return false;
 }
