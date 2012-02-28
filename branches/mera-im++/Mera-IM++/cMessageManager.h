@@ -3,9 +3,12 @@
 #include "iostream"
 #include "winsock2.h"
 #include "windows.h"
+#include "cClientsList.h"
+#include "cClient.h"
 
 using namespace std;
 
+enum eMessageType {RegisterRequest, LoginRequest, LogoutRequest, IM, StatusChanged};
 class cMessageManager 
 {
 private:
@@ -25,10 +28,12 @@ private:
 	int ListenResult;
 	int result;
 	int ClientSocketAddrSize;
-	enum MessageType {LoginRequest, LogoutRequest, IM, StatusChanged};
 
-	cMessageManager::MessageType ProcessMessageType();
-	char * buffer;
+	eMessageType ProcessMessageType(char x);
+	bool ProcessRegisterRequest(SOCKET Client, char* buffer);
+	bool IsUserRegistered(std::string Username);
+
+	cClientsList ClientsList;
 
 public:
 
