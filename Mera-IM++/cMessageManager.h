@@ -40,6 +40,6 @@ public:
 	static void Initialize();
 	static cMessageManager& Instance();
 	SOCKET GetClient();
-	void ProcessDialog(SOCKET Client);
+	bool ProcessDialog(SOCKET Client);
 
 };
