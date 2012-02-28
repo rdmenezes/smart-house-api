@@ -30,9 +30,12 @@ DWORD WINAPI Run(LPVOID CL)
 	send (Client,b, sizeof(b),0);
 	send (Client,"\n",2,0);
 
+	unsigned int MCount = 0;
 
-
-	cMessageManager::Instance().ProcessDialog(Client);
+	while (cMessageManager::Instance().ProcessDialog(Client))
+	{
+		MCount++;
+	}
 	closesocket(Client);
 	return 0;
 }

@@ -51,7 +51,7 @@ void cClient::SetUserPassword(std::string UserPassword)
 	this->UserPassword = UserPassword;
 }
 
-std::string cClient::GetUserName()
+std::string cClient::GetUsername()
 {
 	return UserName;
 }

@@ -58,15 +58,16 @@ SOCKET cMessageManager::GetClient()
 	return accept(Server, (sockaddr *) &ClientAddr, &ClientSocketAddrSize);
 }
 
-void cMessageManager::ProcessDialog(SOCKET Client)
+bool cMessageManager::ProcessDialog(SOCKET Client)
 {
 	cClient User;
+	bool rc = false;
 	
 	char DialogLength[4];
 	int Bytesrecv;
 	if ((Bytesrecv = recv(Client,&DialogLength[0],sizeof(DialogLength),0)) > 3)
 	{
-		return;
+		return rc;
 	}
 
 	int n = atoi(DialogLength);
@@ -80,12 +81,38 @@ void cMessageManager::ProcessDialog(SOCKET Client)
 
 	switch (Type)
 	{
-		case RegisterRequest: {ProcessRegisterRequest(Client,buffer);break;}
-		case LoginRequest: { send(Client,"Login Request\n",strlen("Login Request\n"),0);break;}
-		case LogoutRequest: {send(Client,"Logout Request\n",strlen("Logout Request\n"),0);break;}
-		case IM: {send(Client,"IM\n",strlen("IM\n"),0);break;}
-		case StatusChanged: {send(Client,"Status Changed\n",strlen("Status Changed\n"),0);break;}
+		case RegisterRequest:
+			{
+				rc = ProcessRegisterRequest(Client,buffer);break;
+			}
+
+		case LoginRequest:
+			{
+				send(Client,"Login Request\n",strlen("Login Request\n"),0);
+				rc = true;
+				break;
+			}
+		case LogoutRequest:
+			{
+				send(Client,"Logout Request\n",strlen("Logout Request\n"),0);
+				rc = true;
+				break;
+			}
+		case IM:
+			{
+				send(Client,"IM\n",strlen("IM\n"),0);
+				rc = true;
+				break;
+			}
+		case StatusChanged:
+			{
+				send(Client,"Status Changed\n",strlen("Status Changed\n"),0);
+				rc = true;
+				break;
+			}
 	}
+
+	return rc;
 }
 
 eMessageType cMessageManager::ProcessMessageType(char x)
@@ -95,7 +122,7 @@ eMessageType cMessageManager::ProcessMessageType(char x)
 
 bool cMessageManager::ProcessRegisterRequest(SOCKET Client, char* buffer)
 {
-	//cClient User;
+	cClient User;
 	std::string Username,Password;
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
@@ -116,10 +143,10 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET Client, char* buffer)
 
 	if (!IsUserRegistered(Username))
 	{
-		//User.SetSocketID(Client);
-		//User.SetUserName(Username);
-		//User.SetUserPassword(Password);
-		//ClientsList.Insert(&User);
+		User.SetSocketID(Client);
+		User.SetUserName(Username);
+		User.SetUserPassword(Password);
+		ClientsList.Insert(&User);
 		return true;
 	}
 
@@ -132,11 +159,14 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET Client, char* buffer)
 bool cMessageManager::IsUserRegistered(std::string Username)
 {
 	cClient* Client = ClientsList.Begin();
-	while(Client->Next)
+	if (Client)
 	{
-		//if (Client->GetUserName() == Username)
+		while(Client->Next)
 		{
-			return true;
+			if (Client->GetUsername() == Username)
+			{
+				return true;
+			}
 		}
 	}
 	return false;

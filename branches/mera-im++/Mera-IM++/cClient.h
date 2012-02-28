@@ -26,7 +26,7 @@ public:
 	void SetSocketID (int Socket);
 	void SetUserName(std::string UserName);
 	void SetUserPassword(std::string UserPassword);
-	std::string GetUserName();
+	std::string GetUsername();
 
 	cClient& operator = (const cClient& Copy);
 };
