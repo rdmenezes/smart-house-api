@@ -55,3 +55,8 @@ std::string cClient::GetUsername()
 {
 	return UserName;
 }
+
+SOCKET cClient::GetSocketID()
+{
+	return SocketID;
+}

@@ -32,6 +32,8 @@ private:
 	eMessageType ProcessMessageType(char x);
 	bool ProcessRegisterRequest(SOCKET Client, char* buffer);
 	bool IsUserRegistered(std::string Username);
+	bool ProcessIMRequest(SOCKET Client,char* buffer);
+	SOCKET FindSocketByUsername(std::string Username);
 
 	cClientsList ClientsList;
 

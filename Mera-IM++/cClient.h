@@ -1,6 +1,7 @@
 #pragma once
 #include "iostream"
 #include "string"
+#include "winsock2.h"
 
 
 enum eStatus {Available, FreeToTalk, Away, DoNotDisturb, Offline};
@@ -27,6 +28,7 @@ public:
 	void SetUserName(std::string UserName);
 	void SetUserPassword(std::string UserPassword);
 	std::string GetUsername();
+	SOCKET GetSocketID();
 
 	cClient& operator = (const cClient& Copy);
 };

@@ -25,7 +25,8 @@ void cClientsList::Insert(cClient* Client)
 		{
 			temp = temp->Next;
 		}
-		temp->Next = Client;
+		temp->Next = new cClient;
+		*temp->Next = *Client;
 	}
 }
 
