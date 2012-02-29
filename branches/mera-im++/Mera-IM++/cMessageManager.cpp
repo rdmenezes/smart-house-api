@@ -83,7 +83,8 @@ bool cMessageManager::ProcessDialog(SOCKET Client)
 	{
 		case RegisterRequest:
 			{
-				rc = ProcessRegisterRequest(Client,buffer);break;
+				rc = ProcessRegisterRequest(Client,buffer);
+				break;
 			}
 
 		case LoginRequest:
@@ -100,8 +101,7 @@ bool cMessageManager::ProcessDialog(SOCKET Client)
 			}
 		case IM:
 			{
-				send(Client,"IM\n",strlen("IM\n"),0);
-				rc = true;
+				rc = ProcessIMRequest(Client,buffer);
 				break;
 			}
 		case StatusChanged:
@@ -167,7 +167,54 @@ bool cMessageManager::IsUserRegistered(std::string Username)
 			{
 				return true;
 			}
+			Client = Client->Next;
 		}
 	}
 	return false;
+}
+
+bool cMessageManager::ProcessIMRequest(SOCKET Client,char* buffer)
+{
+	std::string Destination, Message;
+
+	size_t i = 2;
+	while (buffer[i] != ',')
+	{
+		Destination.push_back(buffer[i]);
+		i++;
+	}
+
+	i++;
+	while (buffer[i] != 10) // Replace with 0 after client application is done.
+	{
+		Message.push_back(buffer[i]);
+		i++;
+	}
+
+	send(FindSocketByUsername(Destination),&Message[0],Message.length(),0);
+
+	return true;
+}
+
+SOCKET cMessageManager::FindSocketByUsername( std::string Username )
+{
+	cClient* Client = ClientsList.Begin();
+	if (Client)
+	{
+		while(Client->Next)
+		{
+			if (Client->GetUsername() == Username)
+			{
+				return Client->GetSocketID();
+			}
+			Client = Client->Next;
+		}
+		
+		if (Client->GetUsername() == Username)
+		{
+			return Client->GetSocketID();
+		}
+
+	}
+	return -1;
 }
