@@ -1,36 +1,59 @@
 #include "cClientsList.h"
+using namespace std;
 
 cClientsList::cClientsList()
 {
-	Head = NULL;
+	m_pHead = NULL;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 cClientsList::~cClientsList()
 {
 }
 
-void cClientsList::Insert(cClient* Client)
+////////////////////////////////////////////////////////////////////////////////
+
+void cClientsList::Insert(cClient* pClient)
 {
-	Client->Next = 0;
+	pClient->m_pNextClient = 0;
 	
-	if (!Head)
+	if (!m_pHead)
 	{
-		Head = new cClient;
-		*Head = *Client;
+		m_pHead = new cClient;
+		*m_pHead = *pClient;
 	}
 	else
 	{
-		cClient* temp = Head;
-		while (temp->Next)
+		cClient* temp = m_pHead;
+		while (temp->m_pNextClient)
 		{
-			temp = temp->Next;
+			temp = temp->m_pNextClient;
 		}
-		temp->Next = new cClient;
-		*temp->Next = *Client;
+		temp->m_pNextClient = new cClient;
+		*temp->m_pNextClient = *pClient;
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+cClient* cClientsList::FindByUserName(string sUserName)
+{
+	for (cClient* pClient = m_pHead; pClient != NULL; pClient = pClient->m_pNextClient)
+	{
+		if (pClient->GetUsername() == sUserName)
+		{
+			return pClient;
+		}
+	}
+	return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 cClient* cClientsList::Begin()
 {
-	return Head;
+	return m_pHead;
 }
+
+////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,7 @@
 #pragma once
 #include "cClient.h"
+using namespace std;
+
 class cClientsList
 {
 public:
@@ -8,10 +10,11 @@ public:
 
 private:
 
-	cClient* Head;
+	cClient* m_pHead;
 
 public:
 	
 	void Insert(cClient* Client);
 	cClient* Begin();
+	cClient* FindByUserName(string sUserName);
 };

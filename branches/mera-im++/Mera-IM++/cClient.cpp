@@ -1,62 +1,99 @@
 #include "cClient.h"
+
+using namespace std;
+
 cClient::cClient()
 {
-	Registered = false;
-	Status = Offline;
-	SocketID = -1;
+	m_bIsConnected = false;
+	m_eStatus = eSTATUS_Offline;
+	m_nSocketID = -1;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 cClient::~cClient()
 {
 }
 
-void cClient::SetStatus(cClient Client, eStatus Status)
+////////////////////////////////////////////////////////////////////////////////
+
+void cClient::SetStatus(eStatus eStatus)
 {
-	Client.Status = Status;
+	m_eStatus = eStatus;
 }
 
-eStatus cClient::GetStatus(cClient Client)
+////////////////////////////////////////////////////////////////////////////////
+
+eStatus cClient::GetStatus()
 {
-	return Client.Status;
+	return m_eStatus;
 }
 
-bool cClient::IsRegistered(cClient Client)
+////////////////////////////////////////////////////////////////////////////////
+
+bool cClient::IsConnected()
 {
-	return Client.Registered;
+	return m_bIsConnected;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+void cClient::SetConnected(bool bIsConnected)
+{
+	m_bIsConnected = bIsConnected;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 cClient& cClient::operator = (const cClient& Copy)
 {
-	UserName = Copy.UserName; //socketID
-	UserPassword = Copy.UserPassword;
-	Status = Copy.Status;
-	Registered = Copy.Registered;
-	Next = Copy.Next;
-	SocketID = Copy.SocketID;
+	m_sUserName = Copy.m_sUserName; //socketID
+	m_sUserPassword = Copy.m_sUserPassword;
+	m_eStatus = Copy.m_eStatus;
+	m_bIsConnected = Copy.m_bIsConnected;
+	m_pNextClient = Copy.m_pNextClient;
+	m_nSocketID = Copy.m_nSocketID;
 	return *this;
 }
 
-void cClient::SetSocketID (int Socket)
+////////////////////////////////////////////////////////////////////////////////
+
+void cClient::SetSocketID (int nSocketID)
 {
-	this->SocketID = Socket;
+	m_nSocketID = nSocketID;
 }
 
-void cClient::SetUserName(std::string UserName)
+////////////////////////////////////////////////////////////////////////////////
+
+void cClient::SetUserName(string sUserName)
 {
-	this->UserName = UserName;
+	m_sUserName = sUserName;
 }
 
-void cClient::SetUserPassword(std::string UserPassword)
+////////////////////////////////////////////////////////////////////////////////
+
+void cClient::SetUserPassword(string sUserPassword)
 {
-	this->UserPassword = UserPassword;
+	m_sUserPassword = sUserPassword;
 }
 
-std::string cClient::GetUsername()
+////////////////////////////////////////////////////////////////////////////////
+
+string cClient::GetUsername()
 {
-	return UserName;
+	return m_sUserName;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+string cClient::GetUserPassword()
+{
+	return m_sUserPassword;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 SOCKET cClient::GetSocketID()
 {
-	return SocketID;
+	return m_nSocketID;
 }
