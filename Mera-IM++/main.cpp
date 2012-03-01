@@ -7,35 +7,37 @@ DWORD WINAPI Run(LPVOID CL);
 int main ()
 {
 	cMessageManager::Initialize();
-	SOCKET Client;
+	SOCKET ClientSocket;
 	DWORD thID;
 	
-	while((Client = cMessageManager::Instance().GetClient()) != -1)
+	while((ClientSocket = cMessageManager::Instance().GetClient()) != -1)
 	{		
-		CreateThread(NULL,NULL,Run,&Client,NULL,&thID);
+		CreateThread(NULL,NULL,Run,&ClientSocket,NULL,&thID);
 	}
 	return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 DWORD WINAPI Run(LPVOID CL)
 {
-	SOCKET Client;
-	Client = *(SOCKET *)CL;
+	SOCKET ClientSocket;
+	ClientSocket = *(SOCKET *)CL;
 
 
 	char * a = "Hello, Client! your ID is ";
-	char * b = new char[sizeof(Client)+1];
-	_itoa(Client,b,10);
- 	send (Client,a, strlen(a),0);
-	send (Client,b, sizeof(b),0);
-	send (Client,"\n",2,0);
+	char * b = new char[sizeof(ClientSocket)+1];
+	_itoa(ClientSocket,b,10);
+ 	send (ClientSocket,a, strlen(a),0);
+	send (ClientSocket,b, sizeof(b),0);
+	send (ClientSocket,"\n",2,0);
 
 	unsigned int MCount = 0;
 
-	while (cMessageManager::Instance().ProcessDialog(Client))
+	while (cMessageManager::Instance().ProcessDialog(ClientSocket))
 	{
 		MCount++;
 	}
-	closesocket(Client);
+	closesocket(ClientSocket);
 	return 0;
 }

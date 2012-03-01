@@ -1,112 +1,133 @@
 #include "cMessageManager.h"
-cMessageManager* cMessageManager::self = 0;
+
+using namespace std;
+
+cMessageManager* cMessageManager::m_pSelf = 0;
+
+////////////////////////////////////////////////////////////////////////////////
 
 cMessageManager& cMessageManager::Instance()
 {
-	if(!self)
+	if(!m_pSelf)
 	{
-		self = new cMessageManager;
+		m_pSelf = new cMessageManager;
 	}
-	return *self;
+	return *m_pSelf;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 void cMessageManager::Initialize()
 {
-	delete self;
-	self = new cMessageManager;
+	delete m_pSelf;
+	m_pSelf = new cMessageManager;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
 cMessageManager::cMessageManager ()
 {
 	StartServer();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 cMessageManager::~cMessageManager()
 {
-	delete self;
+	delete m_pSelf;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 int cMessageManager::StartServer()
 {
+	int nResult, nBindResult, nListenResult;
+	char buf[512];
+	sockaddr_in ServerAddr;
+	WORD SocketVersion;
+
 	SocketVersion = MAKEWORD (2,2);
-	result = WSAStartup (SocketVersion,(WSADATA *) &buf[0]);
+	nResult = WSAStartup (SocketVersion,(WSADATA *) &buf[0]);
 	Server = socket (AF_INET, SOCK_STREAM, 0);
 
 	ServerAddr.sin_family = AF_INET;
 	ServerAddr.sin_port = htons(1234);
 	ServerAddr.sin_addr.s_addr = 0;
 
-	if ((BindResult = bind(Server,(sockaddr *) &ServerAddr, sizeof(ServerAddr))) < 0)
+	if ((nBindResult = bind(Server,(sockaddr *) &ServerAddr, sizeof(ServerAddr))) < 0)
 	{
 		cout << "Socket Bind Error" << endl;
 		return -1;
 	}
-	if ((ListenResult = listen(Server, 100)) < 0)
+	if ((nListenResult = listen(Server, 100)) < 0)
 	{
 		cout << "Socket Listen Error" << endl;
 		return -1;
 	}
 
-	ClientSocketAddrSize = sizeof(ClientAddr);
+	m_nClientSocketAddrSize = sizeof(m_ClientAddr);
 
 	return 1;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 SOCKET cMessageManager::GetClient()
 {
-	return accept(Server, (sockaddr *) &ClientAddr, &ClientSocketAddrSize);
+	return accept(Server, (sockaddr *) &m_ClientAddr, &m_nClientSocketAddrSize);
 }
 
-bool cMessageManager::ProcessDialog(SOCKET Client)
+////////////////////////////////////////////////////////////////////////////////
+
+bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 {
 	cClient User;
 	bool rc = false;
 	
-	char DialogLength[4];
+	char MessageLength[4];
 	int Bytesrecv;
-	if ((Bytesrecv = recv(Client,&DialogLength[0],sizeof(DialogLength),0)) > 3)
+	if ((Bytesrecv = recv(ClientSocket,&MessageLength[0],sizeof(MessageLength),0)) > 3)
 	{
 		return rc;
 	}
 
-	int n = atoi(DialogLength);
-	char* buffer = new char [n+1];
+	int nMessageLength = atoi(MessageLength);
+	char* sMessage = new char [nMessageLength+1];
 	
-	recv(Client,&buffer[0],n,0);
-	buffer[n] = 0;
+	recv(ClientSocket,&sMessage[0],nMessageLength,0);
+	sMessage[nMessageLength] = '\0';
 	
-	eMessageType Type;
-	Type = ProcessMessageType(buffer[0]);
+	eMessageType eType;
+	eType = ProcessMessageType(sMessage[0]);
 
-	switch (Type)
+	switch (eType)
 	{
-		case RegisterRequest:
+		case eMESSAGE_RegisterRequest:
 			{
-				rc = ProcessRegisterRequest(Client,buffer);
+				rc = ProcessRegisterRequest(ClientSocket,sMessage);
 				break;
 			}
 
-		case LoginRequest:
+		case eMESSAGE_LoginRequest:
 			{
-				send(Client,"Login Request\n",strlen("Login Request\n"),0);
-				rc = true;
+				//send(ClientSocket,"Login Request\n",strlen("Login Request\n"),0);
+				rc = ProcessLoginRequest(ClientSocket,sMessage);
 				break;
 			}
-		case LogoutRequest:
+		case eMESSAGE_LogoutRequest:
 			{
-				send(Client,"Logout Request\n",strlen("Logout Request\n"),0);
-				rc = true;
+				//send(ClientSocket,"Logout Request\n",strlen("Logout Request\n"),0);
+				rc = ProcessLogoutRequest(ClientSocket,sMessage);
 				break;
 			}
-		case IM:
+		case eMESSAGE_IM:
 			{
-				rc = ProcessIMRequest(Client,buffer);
+				rc = ProcessIMRequest(ClientSocket,sMessage);
 				break;
 			}
-		case StatusChanged:
+		case eMESSAGE_StatusChanged:
 			{
-				send(Client,"Status Changed\n",strlen("Status Changed\n"),0);
+				send(ClientSocket,"Status Changed\n",strlen("Status Changed\n"),0);
 				rc = true;
 				break;
 			}
@@ -115,38 +136,42 @@ bool cMessageManager::ProcessDialog(SOCKET Client)
 	return rc;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 eMessageType cMessageManager::ProcessMessageType(char x)
 {
 	return (eMessageType)(x-'0');
 }
 
-bool cMessageManager::ProcessRegisterRequest(SOCKET Client, char* buffer)
+////////////////////////////////////////////////////////////////////////////////
+
+bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage)
 {
-	cClient User;
-	std::string Username,Password;
+	cClient* pUser;
+	string sUsername,sPassword;
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
 	
 	size_t i = 2;
-	while (buffer[i] != ',')
+	while (sMessage[i] != ',')
 	{
-		Username.push_back(buffer[i]);
+		sUsername.push_back(sMessage[i]);
 		i++;
 	}
 	i++;
-	while (buffer[i] != 10) // Replace with 0 after client application is done.
+	while (sMessage[i] != '\0') // Replace with 0 after client application is done.
 	{
-		Password.push_back(buffer[i]);
+		sPassword.push_back(sMessage[i]);
 		i++;
 	}
 
 
-	if (!IsUserRegistered(Username))
+	if (!IsUserRegistered(sUsername))
 	{
-		User.SetSocketID(Client);
-		User.SetUserName(Username);
-		User.SetUserPassword(Password);
-		ClientsList.Insert(&User);
+		pUser->SetSocketID(ClientSocket);
+		pUser->SetUserName(sUsername);
+		pUser->SetUserPassword(sPassword);
+		ClientsList->Insert(pUser);
 		return true;
 	}
 
@@ -156,65 +181,115 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET Client, char* buffer)
 	}
 }
 
-bool cMessageManager::IsUserRegistered(std::string Username)
+////////////////////////////////////////////////////////////////////////////////
+
+bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
 {
-	cClient* Client = ClientsList.Begin();
-	if (Client)
+	string sUsername,sPassword;
+	
+	size_t i = 2;
+	while (sMessage[i] != ',')
 	{
-		while(Client->Next)
+		sUsername.push_back(sMessage[i]);
+		i++;
+	}
+	i++;
+	while (sMessage[i] != '\0') // Replace with 0 after client application is done.
+	{
+		sPassword.push_back(sMessage[i]);
+		i++;
+	}
+
+	cClient* pClient = ClientsList->FindByUserName(sUsername);
+	if (!pClient)
+	{
+		closesocket(ClientSocket);
+		return false;
+	}
+	else
+	{
+		if (pClient->GetUserPassword() == sPassword)
 		{
-			if (Client->GetUsername() == Username)
-			{
-				return true;
-			}
-			Client = Client->Next;
+			pClient->SetConnected(true);
+			return true;
+		}
+		else
+		{
+			closesocket(ClientSocket);
+			return false;
 		}
 	}
-	return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket, char* sMessage)
+{
+	string sUsername;
+	
+	size_t i = 2;
+	while (sMessage[i] != '\0')
+	{
+		sUsername.push_back(sMessage[i]);
+		i++;
+	}
+
+	cClient* pClient = ClientsList->FindByUserName(sUsername);
+	if (!pClient)
+	{
+		return false;
+	}
+	else
+	{
+		pClient->SetConnected(false);
+		closesocket(ClientSocket);
+		return true;
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+
+bool cMessageManager::IsUserRegistered(string sUserName)
+{
+	return (ClientsList->FindByUserName(sUserName) != NULL) ? true : false;
 }
 
-bool cMessageManager::ProcessIMRequest(SOCKET Client,char* buffer)
+////////////////////////////////////////////////////////////////////////////////
+
+bool cMessageManager::ProcessIMRequest(SOCKET ClientSocket,char* sMessage)
 {
-	std::string Destination, Message;
+	string sDestination, sIM;
 
 	size_t i = 2;
-	while (buffer[i] != ',')
+	while (sMessage[i] != ',')
 	{
-		Destination.push_back(buffer[i]);
+		sDestination.push_back(sMessage[i]);
 		i++;
 	}
 
 	i++;
-	while (buffer[i] != 10) // Replace with 0 after client application is done.
+	while (sMessage[i] != '\0') // Replace with 0 after client application is done.
 	{
-		Message.push_back(buffer[i]);
+		sIM.push_back(sMessage[i]);
 		i++;
 	}
 
-	send(FindSocketByUsername(Destination),&Message[0],Message.length(),0);
-
-	return true;
+	if (FindSocketByUsername(sDestination) > 0)
+	{
+		send(FindSocketByUsername(sDestination),&sIM[0],sIM.length(),0);
+		return true;
+	}
+	return false;
 }
 
-SOCKET cMessageManager::FindSocketByUsername( std::string Username )
-{
-	cClient* Client = ClientsList.Begin();
-	if (Client)
-	{
-		while(Client->Next)
-		{
-			if (Client->GetUsername() == Username)
-			{
-				return Client->GetSocketID();
-			}
-			Client = Client->Next;
-		}
-		
-		if (Client->GetUsername() == Username)
-		{
-			return Client->GetSocketID();
-		}
+////////////////////////////////////////////////////////////////////////////////
 
+SOCKET cMessageManager::FindSocketByUsername(string sUsername)
+{
+	cClient* pClient = ClientsList->FindByUserName(sUsername);
+	if (pClient)
+	{
+		return pClient->GetSocketID();
 	}
 	return -1;
 }
+
+////////////////////////////////////////////////////////////////////////////////

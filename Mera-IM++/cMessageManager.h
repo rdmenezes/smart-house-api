@@ -8,34 +8,37 @@
 
 using namespace std;
 
-enum eMessageType {RegisterRequest, LoginRequest, LogoutRequest, IM, StatusChanged};
+enum eMessageType {
+	eMESSAGE_RegisterRequest,
+	eMESSAGE_LoginRequest,
+	eMESSAGE_LogoutRequest, 
+	eMESSAGE_IM,
+	eMESSAGE_StatusChanged};
+
 class cMessageManager 
 {
 private:
 
 	cMessageManager();
 	~cMessageManager();
-	static cMessageManager* self; 
+	static cMessageManager* m_pSelf; 
 
-	SOCKET Server;	
+	SOCKET Server;	//delete
 	int StartServer();
-	char buf[512];
 
-	WORD SocketVersion;
-	sockaddr_in ServerAddr;
-	sockaddr_in ClientAddr;
-	int BindResult;
-	int ListenResult;
-	int result;
-	int ClientSocketAddrSize;
+	sockaddr_in m_ClientAddr;//delete!!!!!
+
+	int m_nClientSocketAddrSize;//delete!!!!
 
 	eMessageType ProcessMessageType(char x);
-	bool ProcessRegisterRequest(SOCKET Client, char* buffer);
-	bool IsUserRegistered(std::string Username);
-	bool ProcessIMRequest(SOCKET Client,char* buffer);
-	SOCKET FindSocketByUsername(std::string Username);
+	bool ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage);
+	bool ProcessLoginRequest(SOCKET ClientSocket, char* sMessage);
+	bool ProcessLogoutRequest(SOCKET ClientSocket, char* sMessage);
+	bool IsUserRegistered(string sUsername);
+	bool ProcessIMRequest(SOCKET ClientSocket,char* sMessage);
+	SOCKET FindSocketByUsername(string sUsername);
 
-	cClientsList ClientsList;
+	cClientsList* ClientsList;
 
 public:
 
