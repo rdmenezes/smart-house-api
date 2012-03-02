@@ -22,14 +22,10 @@ private:
 	cMessageManager();
 	~cMessageManager();
 	static cMessageManager* m_pSelf; 
+	
+	//delete!!!!! - WE CANNOT DELETE THIS because this parameter is being filled by accept function
 
-	SOCKET Server;	//delete
-	int StartServer();
-
-	sockaddr_in m_ClientAddr;//delete!!!!!
-
-	int m_nClientSocketAddrSize;//delete!!!!
-
+	
 	eMessageType ProcessMessageType(char x);
 	bool ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage);
 	bool ProcessLoginRequest(SOCKET ClientSocket, char* sMessage);
@@ -37,14 +33,12 @@ private:
 	bool IsUserRegistered(string sUsername);
 	bool ProcessIMRequest(SOCKET ClientSocket,char* sMessage);
 	SOCKET FindSocketByUsername(string sUsername);
-
 	cClientsList* ClientsList;
 
 public:
 
-	static void Initialize();
-	static cMessageManager& Instance();
-	SOCKET GetClient();
+	static cMessageManager* Instance();
+	SOCKET cMessageManager::GetClient(SOCKET Server);
 	bool ProcessDialog(SOCKET Client);
-
+	int StartServer();
 };

@@ -1,23 +1,18 @@
 #include "cMessageManager.h"
 
 using namespace std;
-
-cMessageManager* cMessageManager::m_pSelf = 0;
 DWORD WINAPI Run (LPVOID CL);
+cMessageManager* cMessageManager::m_pSelf = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-cMessageManager& cMessageManager::Instance()
+cMessageManager* cMessageManager::Instance()
 {
-	return *m_pSelf;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void cMessageManager::Initialize()
-{
-	delete m_pSelf;
-	m_pSelf = new cMessageManager;
+	if (!m_pSelf)
+	{
+		m_pSelf = new cMessageManager;
+	}
+	return m_pSelf;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +20,6 @@ void cMessageManager::Initialize()
 cMessageManager::cMessageManager ()
 {
 	ClientsList = new cClientsList;
-	StartServer();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +34,7 @@ cMessageManager::~cMessageManager()
 
 int cMessageManager::StartServer()
 {
+	SOCKET Server;
 	int nResult, nBindResult, nListenResult;
 	char buf[512];
 	sockaddr_in ServerAddr;
@@ -64,12 +59,10 @@ int cMessageManager::StartServer()
 		return -1;
 	}
 
-	m_nClientSocketAddrSize = sizeof(m_ClientAddr);
-
 	SOCKET* ClientSocket = new SOCKET;
 	DWORD thID;
 
-	while((*ClientSocket = GetClient()) != -1)
+	while((*ClientSocket = GetClient(Server)) != -1)
 	{		
 		CreateThread(NULL,NULL,Run,ClientSocket,NULL,&thID);
 	}
@@ -78,8 +71,10 @@ int cMessageManager::StartServer()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-SOCKET cMessageManager::GetClient()
+SOCKET cMessageManager::GetClient(SOCKET Server)
 {
+	sockaddr_in m_ClientAddr;
+	int m_nClientSocketAddrSize = sizeof(m_ClientAddr);
 	return accept(Server, (sockaddr *) &m_ClientAddr, &m_nClientSocketAddrSize);
 }
 
@@ -102,6 +97,11 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 	
 	recv(ClientSocket,&sMessage[0],nMessageLength,0);
 	sMessage[nMessageLength+1] = '\0';
+
+
+	// Putting '\0' where ever we encounter '\n'. This is for development testing using netcat because netcat puts \n in the end of
+	// message when pressing ENTER but we're parsing \0's 
+	for (size_t i = 0; i <= nMessageLength; i++) {sMessage[i] = (sMessage[i] == '\n' ? '\0':sMessage[i]);}
 	
 	eMessageType eType;
 	eType = ProcessMessageType(sMessage[0]);
@@ -155,6 +155,7 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 {
 	cClient* pUser = new cClient;
 	string sUsername,sPassword;
+	
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
 	
@@ -165,7 +166,7 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 		i++;
 	}
 	i++;
-	while (sMessage[i] != '\0') // Replace with 0 after client application is done.
+	while (sMessage[i] != '\0')
 	{
 		sPassword.push_back(sMessage[i]);
 		i++;
@@ -200,7 +201,7 @@ bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
 		i++;
 	}
 	i++;
-	while (sMessage[i] != '\0') // Replace with 0 after client application is done.
+	while (sMessage[i] != '\0')
 	{
 		sPassword.push_back(sMessage[i]);
 		i++;
@@ -272,7 +273,7 @@ bool cMessageManager::ProcessIMRequest(SOCKET ClientSocket,char* sMessage)
 	}
 
 	i++;
-	while (sMessage[i] != '\0') // Replace with 0 after client application is done.
+	while (sMessage[i] != '\0')
 	{
 		sIM.push_back(sMessage[i]);
 		i++;
@@ -315,10 +316,12 @@ DWORD WINAPI Run(LPVOID CL)
 
 	unsigned int MCount = 0;
 
-	while (cMessageManager::Instance().ProcessDialog(ClientSocket))
+	while (cMessageManager::Instance()->ProcessDialog(ClientSocket))
 	{
 		MCount++;
 	}
 	closesocket(ClientSocket);
 	return 0;
 }
+
+////////////////////////////////////////////////////////////////////////////////
