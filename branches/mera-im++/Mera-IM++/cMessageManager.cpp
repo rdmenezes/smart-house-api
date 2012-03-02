@@ -3,15 +3,12 @@
 using namespace std;
 
 cMessageManager* cMessageManager::m_pSelf = 0;
+DWORD WINAPI Run (LPVOID CL);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 cMessageManager& cMessageManager::Instance()
 {
-	if(!m_pSelf)
-	{
-		m_pSelf = new cMessageManager;
-	}
 	return *m_pSelf;
 }
 
@@ -27,8 +24,8 @@ void cMessageManager::Initialize()
 
 cMessageManager::cMessageManager ()
 {
-	StartServer();
 	ClientsList = new cClientsList;
+	StartServer();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +66,14 @@ int cMessageManager::StartServer()
 
 	m_nClientSocketAddrSize = sizeof(m_ClientAddr);
 
-	return 1;
+	SOCKET* ClientSocket = new SOCKET;
+	DWORD thID;
+
+	while((*ClientSocket = GetClient()) != -1)
+	{		
+		CreateThread(NULL,NULL,Run,ClientSocket,NULL,&thID);
+	}
+	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -295,3 +299,26 @@ SOCKET cMessageManager::FindSocketByUsername(string sUsername)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+DWORD WINAPI Run(LPVOID CL)
+{
+	SOCKET ClientSocket;
+	ClientSocket = *(SOCKET *)CL;
+
+
+	char * a = "Hello, Client! your ID is ";
+	char * b = new char[sizeof(ClientSocket)+1];
+	_itoa(ClientSocket,b,10);
+	send (ClientSocket,a, strlen(a),0);
+	send (ClientSocket,b, sizeof(b),0);
+	send (ClientSocket,"\n",2,0);
+
+	unsigned int MCount = 0;
+
+	while (cMessageManager::Instance().ProcessDialog(ClientSocket))
+	{
+		MCount++;
+	}
+	closesocket(ClientSocket);
+	return 0;
+}
