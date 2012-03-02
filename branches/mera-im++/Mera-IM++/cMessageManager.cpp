@@ -28,6 +28,7 @@ void cMessageManager::Initialize()
 cMessageManager::cMessageManager ()
 {
 	StartServer();
+	ClientsList = new cClientsList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,7 @@ cMessageManager::cMessageManager ()
 cMessageManager::~cMessageManager()
 {
 	delete m_pSelf;
+	delete ClientsList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +97,7 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 	char* sMessage = new char [nMessageLength+1];
 	
 	recv(ClientSocket,&sMessage[0],nMessageLength,0);
-	sMessage[nMessageLength] = '\0';
+	sMessage[nMessageLength+1] = '\0';
 	
 	eMessageType eType;
 	eType = ProcessMessageType(sMessage[0]);
@@ -147,7 +149,7 @@ eMessageType cMessageManager::ProcessMessageType(char x)
 
 bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage)
 {
-	cClient* pUser;
+	cClient* pUser = new cClient;
 	string sUsername,sPassword;
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
