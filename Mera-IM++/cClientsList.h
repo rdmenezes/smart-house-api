@@ -1,5 +1,6 @@
 #pragma once
 #include "cClient.h"
+
 using namespace std;
 
 class cClientsList

@@ -84,6 +84,8 @@
     <ClCompile Include="cClientsList.cpp" />
     <ClCompile Include="cMessageManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="cUtils.cpp" />
+    <ClCompile Include="cUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
