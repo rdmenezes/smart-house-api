@@ -58,7 +58,7 @@ cClient& cClient::operator = (const cClient& Copy)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void cClient::SetSocketID (int nSocketID)
+void cClient::SetSocketID(int nSocketID)
 {
 	m_nSocketID = nSocketID;
 }
