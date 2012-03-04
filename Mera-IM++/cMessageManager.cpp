@@ -341,10 +341,10 @@ DWORD WINAPI Run(LPVOID CL)
 	cUtils Utils;
 	SOCKET ClientSocket;
 	ClientSocket = *(SOCKET *)CL;
-	int SocketLength = Utils.IntLenInChar((int)ClientSocket);
+	int nSocketLength = Utils.IntLenInChar((int)ClientSocket);
 	char * a = "Hello, Client! your ID is ";
-	char * b = new char[SocketLength+1];
-	_itoa_s(ClientSocket,b,SocketLength+1,10);
+	char * b = new char[nSocketLength+1];
+	_itoa_s(ClientSocket,b,nSocketLength+1,10);
 	send (ClientSocket,a, strlen(a),0);
 	send (ClientSocket,b, sizeof(b),0);
 	send (ClientSocket,"\n",2,0);
