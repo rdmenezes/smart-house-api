@@ -92,7 +92,7 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 		return rc;
 	}
 
-	int nMessageLength = atoi(MessageLength);
+	unsigned int nMessageLength = atoi(MessageLength);
 	char* sMessage = new char [nMessageLength+1];
 	
 	recv(ClientSocket,&sMessage[0],nMessageLength,0);
@@ -338,13 +338,13 @@ cClient* cMessageManager::FindClientBySocketID(SOCKET SocketID)
 
 DWORD WINAPI Run(LPVOID CL)
 {
+	cUtils Utils;
 	SOCKET ClientSocket;
 	ClientSocket = *(SOCKET *)CL;
-
-
+	int SocketLength = Utils.IntLenInChar((int)ClientSocket);
 	char * a = "Hello, Client! your ID is ";
-	char * b = new char[sizeof(ClientSocket)+1];
-	_itoa(ClientSocket,b,10);
+	char * b = new char[SocketLength+1];
+	_itoa_s(ClientSocket,b,SocketLength+1,10);
 	send (ClientSocket,a, strlen(a),0);
 	send (ClientSocket,b, sizeof(b),0);
 	send (ClientSocket,"\n",2,0);

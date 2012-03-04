@@ -5,6 +5,7 @@
 #include "windows.h"
 #include "cClientsList.h"
 #include "cClient.h"
+#include "cUtils.h"
 
 using namespace std;
 
@@ -22,10 +23,6 @@ private:
 	cMessageManager();
 	~cMessageManager();
 	static cMessageManager* m_pSelf; 
-	
-	//delete!!!!! - WE CANNOT DELETE THIS because this parameter is being filled by accept function
-
-	
 	eMessageType ProcessMessageType(char x);
 	bool ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage);
 	bool ProcessLoginRequest(SOCKET ClientSocket, char* sMessage);
