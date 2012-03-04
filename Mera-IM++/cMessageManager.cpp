@@ -87,7 +87,8 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 	
 	char MessageLength[4];
 	int Bytesrecv;
-	if ((Bytesrecv = recv(ClientSocket,&MessageLength[0],sizeof(MessageLength),0)) > 3)
+	
+	if ((Bytesrecv = recv(ClientSocket,&MessageLength[0],4,0)) > 3)
 	{
 		return rc;
 	}
@@ -96,7 +97,7 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 	char* sMessage = new char [nMessageLength+1];
 	
 	recv(ClientSocket,&sMessage[0],nMessageLength,0);
-	sMessage[nMessageLength+1] = '\0';
+	sMessage[nMessageLength] = '\0';
 
 
 	// Putting '\0' where ever we encounter '\n'. This is for development testing using netcat because netcat puts \n in the end of
@@ -155,13 +156,19 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 	
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
-	
+	int c = strlen(sMessage);
+	if (c <= 3)
+	{
+		return false;
+	}
+
 	size_t i = 2;
-	while (sMessage[i] != ',')
+	while (sMessage[i] != ',' && sMessage[i] != '\0')
 	{
 		sUsername.push_back(sMessage[i]);
 		i++;
 	}
+
 	i++;
 	while (sMessage[i] != '\0')
 	{
@@ -176,11 +183,13 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 		pUser->SetUserName(sUsername);
 		pUser->SetUserPassword(sPassword);
 		m_pClientsList->Insert(pUser);
+		send(ClientSocket,"success",sizeof("success"),0);
 		return true;
 	}
 
 	else
 	{
+		send(ClientSocket,"failed",sizeof("failed"),0);
 		return false;
 	}
 }
