@@ -29,11 +29,14 @@ private:
 	eMessageType ProcessMessageType(char x);
 	bool ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage);
 	bool ProcessLoginRequest(SOCKET ClientSocket, char* sMessage);
-	bool ProcessLogoutRequest(SOCKET ClientSocket, char* sMessage);
+	bool ProcessLogoutRequest(SOCKET ClientSocket);
 	bool IsUserRegistered(string sUsername);
 	bool ProcessIMRequest(SOCKET ClientSocket,char* sMessage);
+	bool ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMessage);
 	SOCKET FindSocketByUsername(string sUsername);
-	cClientsList* ClientsList;
+	cClient* FindClientByUsername(string sUsername);
+	cClient* FindClientBySocketID(SOCKET SocketID);
+	cClientsList* m_pClientsList;
 
 public:
 

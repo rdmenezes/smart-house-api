@@ -19,7 +19,7 @@ cMessageManager* cMessageManager::Instance()
 
 cMessageManager::cMessageManager ()
 {
-	ClientsList = new cClientsList;
+	m_pClientsList = new cClientsList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ cMessageManager::cMessageManager ()
 cMessageManager::~cMessageManager()
 {
 	delete m_pSelf;
-	delete ClientsList;
+	delete m_pClientsList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -116,14 +116,12 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 
 		case eMESSAGE_LoginRequest:
 			{
-				//send(ClientSocket,"Login Request\n",strlen("Login Request\n"),0);
 				rc = ProcessLoginRequest(ClientSocket,sMessage);
 				break;
 			}
 		case eMESSAGE_LogoutRequest:
 			{
-				//send(ClientSocket,"Logout Request\n",strlen("Logout Request\n"),0);
-				rc = ProcessLogoutRequest(ClientSocket,sMessage);
+				rc = ProcessLogoutRequest(ClientSocket);
 				break;
 			}
 		case eMESSAGE_IM:
@@ -133,8 +131,7 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 			}
 		case eMESSAGE_StatusChanged:
 			{
-				send(ClientSocket,"Status Changed\n",strlen("Status Changed\n"),0);
-				rc = true;
+				rc = ProcessStatusChangedRequest(ClientSocket,sMessage);
 				break;
 			}
 	}
@@ -178,7 +175,7 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 		pUser->SetSocketID(ClientSocket);
 		pUser->SetUserName(sUsername);
 		pUser->SetUserPassword(sPassword);
-		ClientsList->Insert(pUser);
+		m_pClientsList->Insert(pUser);
 		return true;
 	}
 
@@ -207,7 +204,7 @@ bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
 		i++;
 	}
 
-	cClient* pClient = ClientsList->FindByUserName(sUsername);
+	cClient* pClient = FindClientByUsername(sUsername);
 	if (!pClient)
 	{
 		closesocket(ClientSocket);
@@ -229,18 +226,9 @@ bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket, char* sMessage)
+bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket)
 {
-	string sUsername;
-	
-	size_t i = 2;
-	while (sMessage[i] != '\0')
-	{
-		sUsername.push_back(sMessage[i]);
-		i++;
-	}
-
-	cClient* pClient = ClientsList->FindByUserName(sUsername);
+	cClient* pClient = FindClientBySocketID(ClientSocket);
 	if (!pClient)
 	{
 		return false;
@@ -254,9 +242,9 @@ bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket, char* sMessage)
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::IsUserRegistered(string sUserName)
+bool cMessageManager::IsUserRegistered(string sUsername)
 {
-	return (ClientsList->FindByUserName(sUserName) != NULL) ? true : false;
+	return (FindClientByUsername(sUsername) != NULL) ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -289,14 +277,61 @@ bool cMessageManager::ProcessIMRequest(SOCKET ClientSocket,char* sMessage)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+bool cMessageManager::ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMessage)
+{
+	char cState;
+	size_t i = 2;
+	cState = sMessage[i];
+	cClient* pClient = FindClientBySocketID(ClientSocket);
+	if (!pClient)
+	{
+		return false;
+	}
+	else
+	{
+		pClient->SetStatus((eStatus)(cState - '0'));
+		return true;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 SOCKET cMessageManager::FindSocketByUsername(string sUsername)
 {
-	cClient* pClient = ClientsList->FindByUserName(sUsername);
+	cClient* pClient = FindClientByUsername(sUsername);
 	if (pClient)
 	{
 		return pClient->GetSocketID();
 	}
 	return -1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+cClient* cMessageManager::FindClientByUsername(string sUsername)
+{
+	for (cClient* pClient = m_pClientsList->Begin(); pClient != NULL; pClient = pClient->m_pNextClient)
+	{
+		if (pClient->GetUsername() == sUsername)
+		{
+			return pClient;
+		}
+	}
+	return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+cClient* cMessageManager::FindClientBySocketID(SOCKET SocketID)
+{
+	for (cClient* pClient = m_pClientsList->Begin(); pClient != NULL; pClient = pClient->m_pNextClient)
+	{
+		if (pClient->GetSocketID() == SocketID)
+		{
+			return pClient;
+		}
+	}
+	return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -37,20 +37,6 @@ void cClientsList::Insert(cClient* pClient)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-cClient* cClientsList::FindByUserName(string sUserName)
-{
-	for (cClient* pClient = m_pHead; pClient != NULL; pClient = pClient->m_pNextClient)
-	{
-		if (pClient->GetUsername() == sUserName)
-		{
-			return pClient;
-		}
-	}
-	return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 cClient* cClientsList::Begin()
 {
 	return m_pHead;

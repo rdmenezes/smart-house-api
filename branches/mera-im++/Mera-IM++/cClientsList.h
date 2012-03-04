@@ -16,5 +16,4 @@ public:
 	
 	void Insert(cClient* Client);
 	cClient* Begin();
-	cClient* FindByUserName(string sUserName);
 };
