@@ -358,7 +358,7 @@ DWORD WINAPI Run(LPVOID CL)
 	send (ClientSocket,b, sizeof(b),0);
 	send (ClientSocket,"\n",2,0);
 
-	unsigned int MCount = 0;
+	int MCount = 0;
 
 	while (cMessageManager::Instance()->ProcessDialog(ClientSocket))
 	{
