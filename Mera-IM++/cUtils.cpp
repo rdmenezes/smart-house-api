@@ -1,4 +1,7 @@
+#pragma once
+
 #include "cUtils.h"
+
 cUtils::cUtils()
 {
 }
@@ -6,12 +9,12 @@ cUtils::~cUtils()
 {
 }
 
-signed int cUtils::IntLenInChar(signed int Val)
+int cUtils::IntLenInChar(int Value)
 {
-	signed int c = 0;
-	while (Val > 0)
+	int c = 0;
+	while (Value > 0)
 	{
-		Val = Val/10;
+		Value = Value/10;
 		c++;
 	}
 	return c;
