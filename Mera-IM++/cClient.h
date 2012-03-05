@@ -1,7 +1,7 @@
 #pragma once
-#include "iostream"
-#include "string"
-#include "winsock2.h"
+#include <iostream>
+#include <string>
+#include <winsock2.h>
 
 using namespace std;
 

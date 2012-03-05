@@ -1,6 +1,7 @@
 #include "cMessageManager.h"
 
 using namespace std;
+
 DWORD WINAPI Run (LPVOID CL);
 cMessageManager* cMessageManager::m_pSelf = 0;
 
@@ -347,10 +348,10 @@ cClient* cMessageManager::FindClientBySocketID(SOCKET SocketID)
 
 DWORD WINAPI Run(LPVOID CL)
 {
-	cUtils Utils;
+	cUtils* Utils = new cUtils;
 	SOCKET ClientSocket;
 	ClientSocket = *(SOCKET *)CL;
-	int nSocketLength = Utils.IntLenInChar((int)ClientSocket);
+	int nSocketLength = Utils->IntLenInChar((int)ClientSocket);
 	char * a = "Hello, Client! your ID is ";
 	char * b = new char[nSocketLength+1];
 	_itoa_s(ClientSocket,b,nSocketLength+1,10);

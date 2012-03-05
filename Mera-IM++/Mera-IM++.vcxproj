@@ -78,6 +78,7 @@
     <ClInclude Include="cClient.h" />
     <ClInclude Include="cClientsList.h" />
     <ClInclude Include="cMessageManager.h" />
+    <ClInclude Include="cUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cClient.cpp" />
@@ -85,7 +86,6 @@
     <ClCompile Include="cMessageManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cUtils.cpp" />
-    <ClCompile Include="cUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
