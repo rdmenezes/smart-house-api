@@ -3,7 +3,7 @@
 class cUtils
 {
 public:
-	 cUtils();
+	cUtils();
 	~cUtils();
 	int IntLenInChar(int Value);
 };
