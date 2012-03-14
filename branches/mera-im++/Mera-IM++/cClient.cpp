@@ -51,7 +51,7 @@ cClient& cClient::operator = (const cClient& Copy)
 	m_sUserPassword = Copy.m_sUserPassword;
 	m_eStatus = Copy.m_eStatus;
 	m_bIsConnected = Copy.m_bIsConnected;
-	m_pNextClient = Copy.m_pNextClient;
+	//m_pNextClient = Copy.m_pNextClient;
 	m_nSocketID = Copy.m_nSocketID;
 	return *this;
 }

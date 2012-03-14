@@ -21,7 +21,7 @@ private:
 	int m_nSocketID;
 
 public:
-	cClient* m_pNextClient;
+//	cClient* m_pNextClient;
 	void SetStatus(eStatus eStatus);
 	void SetConnected(bool bIsConnected);
 	eStatus GetStatus();
