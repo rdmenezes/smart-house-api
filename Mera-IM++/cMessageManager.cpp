@@ -1,4 +1,5 @@
 #include "cMessageManager.h"
+#include "cClientsList.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ cMessageManager* cMessageManager::Instance()
 
 cMessageManager::cMessageManager ()
 {
-	m_pClientsList = new cClientsList;
+	m_pClientsList = new cList<cClient>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -214,7 +215,7 @@ bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
 		i++;
 	}
 
-	cClient* pClient = FindClientByUsername(sUsername);
+	cClient* pClient = m_pClientsList->FindByUsername(sUsername);
 	if (!pClient)
 	{
 		closesocket(ClientSocket);
@@ -238,7 +239,7 @@ bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
 
 bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket)
 {
-	cClient* pClient = FindClientBySocketID(ClientSocket);
+	cClient* pClient = m_pClientsList->FindBySocketID(ClientSocket);
 	if (!pClient)
 	{
 		return false;
@@ -254,7 +255,7 @@ bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket)
 
 bool cMessageManager::IsUserRegistered(string sUsername)
 {
-	return (FindClientByUsername(sUsername) != NULL) ? true : false;
+	return (m_pClientsList->FindByUsername(sUsername) != NULL) ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,7 +293,7 @@ bool cMessageManager::ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMes
 	char cState;
 	size_t i = 2;
 	cState = sMessage[i];
-	cClient* pClient = FindClientBySocketID(ClientSocket);
+	cClient* pClient = m_pClientsList->FindBySocketID(ClientSocket);
 	if (!pClient)
 	{
 		return false;
@@ -308,7 +309,7 @@ bool cMessageManager::ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMes
 
 SOCKET cMessageManager::FindSocketByUsername(string sUsername)
 {
-	cClient* pClient = FindClientByUsername(sUsername);
+	cClient* pClient = m_pClientsList->FindByUsername(sUsername);
 	if (pClient)
 	{
 		return pClient->GetSocketID();
@@ -318,21 +319,22 @@ SOCKET cMessageManager::FindSocketByUsername(string sUsername)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-cClient* cMessageManager::FindClientByUsername(string sUsername)
+/*cClient* cMessageManager::FindClientByUsername(string sUsername)
 {
-	for (cClient* pClient = m_pClientsList->Begin(); pClient != NULL; pClient = pClient->m_pNextClient)
+	for (ListItem* pClient = m_pClientsList->Begin(); pClient != NULL; pClient = pClient->m_pNext)
 	{
-		if (pClient->GetUsername() == sUsername)
+		if (pClient->Data.GetUsername() == sUsername)
 		{
-			return pClient;
+			return &(pClient->Data);
 		}
 	}
+
 	return NULL;
-}
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////
 
-cClient* cMessageManager::FindClientBySocketID(SOCKET SocketID)
+/*cClient* cMessageManager::FindClientBySocketID(SOCKET SocketID)
 {
 	for (cClient* pClient = m_pClientsList->Begin(); pClient != NULL; pClient = pClient->m_pNextClient)
 	{
@@ -342,9 +344,9 @@ cClient* cMessageManager::FindClientBySocketID(SOCKET SocketID)
 		}
 	}
 	return NULL;
-}
+}*/
 
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////*/
 
 DWORD WINAPI Run(LPVOID CL)
 {

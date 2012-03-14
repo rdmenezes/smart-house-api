@@ -31,9 +31,9 @@ private:
 	bool ProcessIMRequest(SOCKET ClientSocket,char* sMessage);
 	bool ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMessage);
 	SOCKET FindSocketByUsername(string sUsername);
-	cClient* FindClientByUsername(string sUsername);
-	cClient* FindClientBySocketID(SOCKET SocketID);
-	cClientsList* m_pClientsList;
+	//cClient* FindClientByUsername(string sUsername);
+	//cClient* FindClientBySocketID(SOCKET SocketID);
+	cList<cClient>* m_pClientsList;
 
 public:
 
