@@ -1,5 +1,4 @@
 #include "cMessageManager.h"
-#include "cClientsList.h"
 
 using namespace std;
 
@@ -155,7 +154,7 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 {
 	cClient* pUser = new cClient;
 	string sUsername,sPassword;
-	
+	bool rc = false;
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
 	int c = strlen(sMessage);
@@ -186,14 +185,16 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 		pUser->SetUserPassword(sPassword);
 		m_pClientsList->Insert(pUser);
 		send(ClientSocket,"success",sizeof("success"),0);
-		return true;
+		rc = true;
 	}
 
 	else
 	{
 		send(ClientSocket,"failed",sizeof("failed"),0);
-		return false;
 	}
+
+	delete pUser;
+	return rc;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -318,35 +319,6 @@ SOCKET cMessageManager::FindSocketByUsername(string sUsername)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-/*cClient* cMessageManager::FindClientByUsername(string sUsername)
-{
-	for (ListItem* pClient = m_pClientsList->Begin(); pClient != NULL; pClient = pClient->m_pNext)
-	{
-		if (pClient->Data.GetUsername() == sUsername)
-		{
-			return &(pClient->Data);
-		}
-	}
-
-	return NULL;
-}*/
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*cClient* cMessageManager::FindClientBySocketID(SOCKET SocketID)
-{
-	for (cClient* pClient = m_pClientsList->Begin(); pClient != NULL; pClient = pClient->m_pNextClient)
-	{
-		if (pClient->GetSocketID() == SocketID)
-		{
-			return pClient;
-		}
-	}
-	return NULL;
-}*/
-
-////////////////////////////////////////////////////////////////////////////////*/
 
 DWORD WINAPI Run(LPVOID CL)
 {
