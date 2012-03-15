@@ -76,13 +76,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cClient.h" />
-    <ClInclude Include="cClientsList.h" />
+    <ClInclude Include="cList.h" />
     <ClInclude Include="cMessageManager.h" />
     <ClInclude Include="cUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cClient.cpp" />
-    <ClCompile Include="cClientsList.cpp" />
     <ClCompile Include="cMessageManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cUtils.cpp" />

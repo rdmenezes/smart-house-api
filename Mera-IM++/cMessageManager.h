@@ -3,7 +3,7 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <iostream>
-#include "cClientsList.h"
+#include "cList.h"
 #include "cClient.h"
 #include "cUtils.h"
 
@@ -31,8 +31,6 @@ private:
 	bool ProcessIMRequest(SOCKET ClientSocket,char* sMessage);
 	bool ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMessage);
 	SOCKET FindSocketByUsername(string sUsername);
-	//cClient* FindClientByUsername(string sUsername);
-	//cClient* FindClientBySocketID(SOCKET SocketID);
 	cList<cClient>* m_pClientsList;
 
 public:
