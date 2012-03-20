@@ -9,23 +9,20 @@ public:
 	 cList();
 	 ~cList();
 
-private:
+protected:
 	struct ListItem
     {
         ListItem* m_pNext;
         T* m_pData;
         ListItem(T* pData)
         {
-			m_pData = new T;
-			*m_pData = *pData;
+			m_pData = pData;
 		}
     };
 	ListItem* m_pHead;
 public:
 	
 	void Insert(T* Client);
-	T* FindByUsername(string sUsername);
-	T* FindBySocketID(SOCKET SocketID);
 };
 
 template<class T> cList<T>::cList()
@@ -58,36 +55,6 @@ template<class T> void cList<T>::Insert(T* Data)
 		}
 		temp->m_pNext = pNewItem;
 	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-template<class T> T* cList<T>::FindByUsername(string sUsername)
-{
-	for (ListItem* pItem = m_pHead; pItem != NULL; pItem = pItem->m_pNext)
-	{
-		if (pItem->m_pData->GetUsername() == sUsername)
-		{
-			return pItem->m_pData;
-		}
-	}
-
-	return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-template<class T> T* cList<T>::FindBySocketID(SOCKET SocketID)
-{
-	for (ListItem* pItem = m_pHead; pItem != NULL; pItem = pItem->m_pNext)
-	{
-		if (pItem->m_pData->GetSocketID() == SocketID)
-		{
-			return pItem->m_pData;
-		}
-	}
-
-	return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,6 @@
 #include "cMessageManager.h"
 
+
 using namespace std;
 
 DWORD WINAPI Run (LPVOID CL);
@@ -20,7 +21,7 @@ cMessageManager* cMessageManager::Instance()
 
 cMessageManager::cMessageManager ()
 {
-	m_pClientsList = new cList<cClient>;
+	m_pClientsList = new cClientsList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
