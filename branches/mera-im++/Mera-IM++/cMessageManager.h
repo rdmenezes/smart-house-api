@@ -3,9 +3,9 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <iostream>
-#include "cList.h"
 #include "cClient.h"
 #include "cUtils.h"
+#include "cClientsList.h"
 
 using namespace std;
 
@@ -31,7 +31,9 @@ private:
 	bool ProcessIMRequest(SOCKET ClientSocket,char* sMessage);
 	bool ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMessage);
 	SOCKET FindSocketByUsername(string sUsername);
-	cList<cClient>* m_pClientsList;
+	//cClient* FindClientByUsername(string sUsername);
+	//cClient* FindClientBySocketID(SOCKET SocketID);
+	cClientsList* m_pClientsList;
 
 public:
 
