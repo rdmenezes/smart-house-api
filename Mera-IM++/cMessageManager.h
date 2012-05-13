@@ -1,7 +1,5 @@
 #pragma once
 
-#include <winsock2.h>
-#include <windows.h>
 #include <iostream>
 #include "cClient.h"
 #include "cUtils.h"
@@ -40,5 +38,5 @@ public:
 	static cMessageManager* Instance();
 	SOCKET cMessageManager::GetClient(SOCKET Server);
 	bool ProcessDialog(SOCKET Client);
-	int StartServer();
+	//int StartServer();
 };
