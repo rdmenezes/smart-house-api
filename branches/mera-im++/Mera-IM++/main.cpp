@@ -1,10 +1,10 @@
-#include "cMessageManager.h"
+#include "cServer.h"
 using namespace std;
 
 
 int main ()
 {
-	cMessageManager::Instance()->StartServer();
+	cServer::Instance()->StartServer();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

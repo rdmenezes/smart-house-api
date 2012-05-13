@@ -80,12 +80,14 @@
     <ClInclude Include="cList.h" />
     <ClInclude Include="cList.h" />
     <ClInclude Include="cMessageManager.h" />
+    <ClInclude Include="cServer.h" />
     <ClInclude Include="cUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cClient.cpp" />
     <ClCompile Include="cClientsList.cpp" />
     <ClCompile Include="cMessageManager.cpp" />
+    <ClCompile Include="cServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cUtils.cpp" />
   </ItemGroup>

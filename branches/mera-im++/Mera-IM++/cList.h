@@ -13,10 +13,11 @@ protected:
 	struct ListItem
     {
         ListItem* m_pNext;
-        T* m_pData;
+		T* m_pData;
         ListItem(T* pData)
         {
-			m_pData = pData;
+			m_pData = new T;
+			*m_pData = *pData;
 		}
     };
 	ListItem* m_pHead;
