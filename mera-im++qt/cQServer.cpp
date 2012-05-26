@@ -24,32 +24,28 @@ void cQServer::StartServer (int Port)
 
 	else
 	{
-		while(nMaxConnections <= 2)
-		{	
-			if(m_pTcpServer->waitForNewConnection())
+	//	while(nMaxConnections <= 2)
+	//	{	
+			if(m_pTcpServer->waitForNewConnection(5000000000))
 			{
 				nConnections++;
 				OnClientConnected (m_pTcpServer);
 			}
-		}
+	//	}
 	}
 }
 
 void cQServer::OnClientConnected (QTcpServer* Server)
 {
 	QTcpSocket* pClientSocket = Server->nextPendingConnection();
-	QDataStream in(pClientSocket);
-	QString sData;
-	quint16 blockSize = 2;
-
-	in.setVersion(QDataStream::Qt_4_8);
-
-	while (pClientSocket->bytesAvailable() < blockSize)
-	{
-		pClientSocket->readyRead();
-	}
-	
-
-	in >> blockSize;
-	in >> sData;
+	connect (pClientSocket, SIGNAL (readyRead()),this, SLOT(OnDataFromClient()));
+	pClientSocket->write("Server Response: Connected!");
+}
+void cQServer::OnDataFromClient()
+{
+	QTcpSocket* pClientSocket = (QTcpSocket*)sender();
+    QDataStream in(pClientSocket);
+    in.setVersion(QDataStream::Qt_4_2);
+	QString buffer =  pClientSocket->readAll();
+	cMessageManager::Instance()->ProcessDialog(pClientSocket,&buffer);
 }

@@ -4,6 +4,7 @@
 #include "cClient.h"
 #include "cUtils.h"
 #include "cClientsList.h"
+#include <QtNetwork>
 
 using namespace std;
 
@@ -22,13 +23,13 @@ private:
 	~cMessageManager();
 	static cMessageManager* m_pSelf; 
 	eMessageType ProcessMessageType(char x);
-	bool ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage);
-	bool ProcessLoginRequest(SOCKET ClientSocket, char* sMessage);
-	bool ProcessLogoutRequest(SOCKET ClientSocket);
-	bool IsUserRegistered(string sUsername);
-	bool ProcessIMRequest(SOCKET ClientSocket,char* sMessage);
-	bool ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMessage);
-	SOCKET FindSocketByUsername(string sUsername);
+	bool ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* sMessage);
+	bool ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMessage);
+	bool ProcessLogoutRequest(QTcpSocket* ClientSocket);
+	bool IsUserRegistered(QString sUsername);
+	bool ProcessIMRequest(QTcpSocket* ClientSocket,QString* sMessage);
+	bool ProcessStatusChangedRequest(QTcpSocket* ClientSocket,QString* sMessage);
+	SOCKET FindSocketByUsername(QString sUsername);
 	//cClient* FindClientByUsername(string sUsername);
 	//cClient* FindClientBySocketID(SOCKET SocketID);
 	cClientsList* m_pClientsList;
@@ -37,6 +38,6 @@ public:
 
 	static cMessageManager* Instance();
 	SOCKET cMessageManager::GetClient(SOCKET Server);
-	bool ProcessDialog(SOCKET Client);
+	bool ProcessDialog(QTcpSocket* Client, QString* Message);
 	//int StartServer();
 };

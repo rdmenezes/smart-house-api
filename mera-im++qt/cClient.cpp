@@ -64,35 +64,35 @@ void cClient::SetSocketID(int nSocketID)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void cClient::SetUserName(string sUserName)
+void cClient::SetUserName(QString sUserName)
 {
 	m_sUserName = sUserName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void cClient::SetUserPassword(string sUserPassword)
+void cClient::SetUserPassword(QString sUserPassword)
 {
 	m_sUserPassword = sUserPassword;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-string cClient::GetUsername()
+QString cClient::GetUsername()
 {
 	return m_sUserName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-string cClient::GetUserPassword()
+QString cClient::GetUserPassword()
 {
 	return m_sUserPassword;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-SOCKET cClient::GetSocketID()
+int cClient::GetSocketID()
 {
 	return m_nSocketID;
 }

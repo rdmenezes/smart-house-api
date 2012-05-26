@@ -1,5 +1,7 @@
 #pragma once
 #include "clist.h"
+#include "qstring.h"
+#include <QtNetwork>
 class cClientsList :
 	public cList<cClient>
 {
@@ -7,7 +9,7 @@ public:
 	cClientsList(void);
 	~cClientsList(void);
 
-	cClient* FindByUsername(string sUsername);
-	cClient* FindBySocketID(SOCKET SocketID);
+	cClient* FindByUsername(QString sUsername);
+	cClient* FindBySocketID(QTcpSocket* SocketID);
 };
 

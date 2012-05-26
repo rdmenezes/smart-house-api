@@ -33,12 +33,12 @@ cMessageManager::~cMessageManager()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
+bool cMessageManager::ProcessDialog(QTcpSocket* ClientSocket, QString* sMessage)
 {
 	cClient User;
 	bool rc = false;
 	
-	char MessageLength[4];
+/*	char MessageLength[4];
 	int Bytesrecv;
 	
 	if ((Bytesrecv = recv(ClientSocket,&MessageLength[0],4,0)) > 3)
@@ -56,11 +56,12 @@ bool cMessageManager::ProcessDialog(SOCKET ClientSocket)
 	// Putting '\0' where ever we encounter '\n'. This is for development testing using netcat because netcat puts \n in the end of
 	// message when pressing ENTER but we're parsing \0's 
 	for (size_t i = 0; i <= nMessageLength; i++) {sMessage[i] = (sMessage[i] == '\n' ? '\0':sMessage[i]);}
-	
+	*/
+	sMessage->remove('\n');
 	eMessageType eType;
-	eType = ProcessMessageType(sMessage[0]);
+	QString sType = *sMessage->begin();
 
-	switch (eType)
+	switch (sType.toInt())
 	{
 		case eMESSAGE_RegisterRequest:
 			{
@@ -102,47 +103,46 @@ eMessageType cMessageManager::ProcessMessageType(char x)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage)
+bool cMessageManager::ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* sMessage)
 {
 	cClient* pUser = new cClient;
-	string sUsername,sPassword;
+	QString sUsername,sPassword;
 	bool rc = false;
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
-	int c = strlen(sMessage);
-	if (c <= 3)
+	if (sMessage->length() < 3)
 	{
 		return false;
 	}
 
 	size_t i = 2;
-	while (sMessage[i] != ',' && sMessage[i] != '\0')
+	while (sMessage->at(i) != ',' && sMessage->at(i) != '\0')
 	{
-		sUsername.push_back(sMessage[i]);
+		sUsername.push_back(sMessage->at(i));
 		i++;
 	}
 
 	i++;
-	while (sMessage[i] != '\0')
+	while (i < sMessage->length() && sMessage->at(i) != '\0')
 	{
-		sPassword.push_back(sMessage[i]);
+		sPassword.push_back(sMessage->at(i));
 		i++;
 	}
 
 
 	if (!IsUserRegistered(sUsername))
 	{
-		pUser->SetSocketID(ClientSocket);
+		pUser->SetSocketID(ClientSocket->socketDescriptor());
 		pUser->SetUserName(sUsername);
 		pUser->SetUserPassword(sPassword);
 		m_pClientsList->Insert(pUser);
-		send(ClientSocket,"success",sizeof("success"),0);
+		ClientSocket->write("Registered successfully");
 		rc = true;
 	}
 
 	else
 	{
-		send(ClientSocket,"failed",sizeof("failed"),0);
+		ClientSocket->write("such user is already registered on this server");
 	}
 
 	delete pUser;
@@ -151,27 +151,27 @@ bool cMessageManager::ProcessRegisterRequest(SOCKET ClientSocket, char* sMessage
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
+bool cMessageManager::ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMessage)
 {
-	string sUsername,sPassword;
+	QString sUsername,sPassword;
 	
 	size_t i = 2;
-	while (sMessage[i] != ',')
+	while (sMessage->at(i) != ',')
 	{
-		sUsername.push_back(sMessage[i]);
+		sUsername.push_back(sMessage->at(i));
 		i++;
 	}
 	i++;
-	while (sMessage[i] != '\0')
+	while (i < sMessage->length() && sMessage->at(i) != '\0')
 	{
-		sPassword.push_back(sMessage[i]);
+		sPassword.push_back(sMessage->at(i));
 		i++;
 	}
 
 	cClient* pClient = m_pClientsList->FindByUsername(sUsername);
 	if (!pClient)
 	{
-		closesocket(ClientSocket);
+		ClientSocket->write("User not found");
 		return false;
 	}
 	else
@@ -179,18 +179,19 @@ bool cMessageManager::ProcessLoginRequest(SOCKET ClientSocket, char* sMessage)
 		if (pClient->GetUserPassword() == sPassword)
 		{
 			pClient->SetConnected(true);
+			ClientSocket->write("Log in successfully");
 			return true;
 		}
 		else
 		{
-			closesocket(ClientSocket);
+			ClientSocket->write("Incorrect password");
 			return false;
 		}
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket)
+bool cMessageManager::ProcessLogoutRequest(QTcpSocket* ClientSocket)
 {
 	cClient* pClient = m_pClientsList->FindBySocketID(ClientSocket);
 	if (!pClient)
@@ -200,52 +201,55 @@ bool cMessageManager::ProcessLogoutRequest(SOCKET ClientSocket)
 	else
 	{
 		pClient->SetConnected(false);
-		closesocket(ClientSocket);
+//		closesocket(ClientSocket);
 		return true;
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::IsUserRegistered(string sUsername)
+bool cMessageManager::IsUserRegistered(QString sUsername)
 {
 	return (m_pClientsList->FindByUsername(sUsername) != NULL) ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessIMRequest(SOCKET ClientSocket,char* sMessage)
+bool cMessageManager::ProcessIMRequest(QTcpSocket* ClientSocket,QString* sMessage)
 {
-	string sDestination, sIM;
+	QString sDestination, sIM;
 
 	size_t i = 2;
-	while (sMessage[i] != ',')
+	while (sMessage->at(i) != ',')
 	{
-		sDestination.push_back(sMessage[i]);
+		sDestination.push_back(sMessage->at(i));
 		i++;
 	}
 
 	i++;
-	while (sMessage[i] != '\0')
+	while (i < sMessage->length() && sMessage->at(i) != '\0')
 	{
-		sIM.push_back(sMessage[i]);
+		sIM.push_back(sMessage->at(i));
 		i++;
 	}
 
 	if (FindSocketByUsername(sDestination) > 0)
 	{
-		send(FindSocketByUsername(sDestination),&sIM[0],sIM.length(),0);
+		QTcpSocket* receiver = new QTcpSocket;
+		receiver->setSocketDescriptor(FindSocketByUsername(sDestination));
+//		receiver->write(&(QString *)sIM);
 		return true;
 	}
+
 	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMessage)
+bool cMessageManager::ProcessStatusChangedRequest(QTcpSocket* ClientSocket,QString* sMessage)
 {
-	char cState;
+	QString sState;
 	size_t i = 2;
-	cState = sMessage[i];
+	sState = sMessage[i];
 	cClient* pClient = m_pClientsList->FindBySocketID(ClientSocket);
 	if (!pClient)
 	{
@@ -253,14 +257,14 @@ bool cMessageManager::ProcessStatusChangedRequest(SOCKET ClientSocket,char* sMes
 	}
 	else
 	{
-		pClient->SetStatus((eStatus)(cState - '0'));
+		pClient->SetStatus((eStatus)(sState.toInt()));
 		return true;
 	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-SOCKET cMessageManager::FindSocketByUsername(string sUsername)
+SOCKET cMessageManager::FindSocketByUsername(QString sUsername)
 {
 	cClient* pClient = m_pClientsList->FindByUsername(sUsername);
 	if (pClient)
