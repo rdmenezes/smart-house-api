@@ -12,7 +12,7 @@ cClientsList::~cClientsList(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-cClient* cClientsList::FindByUsername(string sUsername)
+cClient* cClientsList::FindByUsername(QString sUsername)
 {
 	for (ListItem* pItem = m_pHead; pItem != NULL; pItem = pItem->m_pNext)
 	{
@@ -27,11 +27,11 @@ cClient* cClientsList::FindByUsername(string sUsername)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-cClient* cClientsList::FindBySocketID(SOCKET SocketID)
+cClient* cClientsList::FindBySocketID(QTcpSocket* SocketID)
 {
 	for (ListItem* pItem = m_pHead; pItem != NULL; pItem = pItem->m_pNext)
 	{
-		if (pItem->m_pData->GetSocketID() == SocketID)
+		if (pItem->m_pData->GetSocketID() == SocketID->socketDescriptor())
 		{
 			return pItem->m_pData;
 		}

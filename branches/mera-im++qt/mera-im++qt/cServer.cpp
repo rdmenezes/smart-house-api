@@ -34,10 +34,11 @@ DWORD WINAPI Run(LPVOID CL)
 
 	int MCount = 0;
 
-	while (cMessageManager::Instance()->ProcessDialog(ClientSocket))
+/*	while (cMessageManager::Instance()->ProcessDialog(ClientSocket, *"0"))
 	{
 		MCount++;
 	}
+*/
 	closesocket(ClientSocket);
 	return 0;
 }

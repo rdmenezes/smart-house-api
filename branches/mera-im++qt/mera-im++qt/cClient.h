@@ -2,8 +2,9 @@
 #include <iostream>
 #include <string>
 #include <winsock2.h>
-
+#include <qstring.h>
 using namespace std;
+
 
 enum eStatus {eSTATUS_Available, eSTATUS_FreeToTalk, eSTATUS_Away, eSTATUS_DoNotDisturb, eSTATUS_Offline};
 class cClient 
@@ -14,8 +15,8 @@ public:
 
 private:
 
-	string m_sUserName;
-	string m_sUserPassword;
+	QString m_sUserName;
+	QString m_sUserPassword;
 	eStatus m_eStatus;
 	bool m_bIsConnected;
 	int m_nSocketID;
@@ -26,11 +27,11 @@ public:
 	eStatus GetStatus();
 	bool IsConnected();
 	void SetSocketID (int nSocketID);
-	void SetUserName(string sUserName);
-	void SetUserPassword(string sUserPassword);
-	string GetUsername();
-	string GetUserPassword();
-	SOCKET GetSocketID();
+	void SetUserName(QString sUserName);
+	void SetUserPassword(QString sUserPassword);
+	QString GetUsername();
+	QString GetUserPassword();
+	int GetSocketID();
 
 	cClient& operator = (const cClient& Copy);
 };
