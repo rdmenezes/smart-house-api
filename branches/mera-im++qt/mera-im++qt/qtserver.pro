@@ -4,16 +4,13 @@
 
 TEMPLATE = app
 TARGET = qtserver
-DESTDIR = ./
-QT += core gui network xml
+DESTDIR = ../
+QT += core gui network
 CONFIG += debug
-DEFINES += QT_LARGEFILE_SUPPORT QT_XML_LIB QT_NETWORK_LIB
+DEFINES += QT_LARGEFILE_SUPPORT QT_NETWORK_LIB
 INCLUDEPATH += ./GeneratedFiles \
     ./GeneratedFiles/Debug \
     .
-LIBS += -lwsock32 \
-    -l/"$(INHERIT)/" \
-    -lwsock32
 PRECOMPILED_HEADER = StdAfx.h
 DEPENDPATH += .
 MOC_DIR += ./GeneratedFiles/debug
@@ -21,4 +18,3 @@ OBJECTS_DIR += debug
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
 include(qtserver.pri)
-win32:RC_FILE = qtserver.rc

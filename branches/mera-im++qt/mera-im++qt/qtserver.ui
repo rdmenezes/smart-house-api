@@ -65,8 +65,5 @@ and press &quot;Start Server&quot;</string>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="qtserver.qrc"/>
- </resources>
  <connections/>
 </ui>

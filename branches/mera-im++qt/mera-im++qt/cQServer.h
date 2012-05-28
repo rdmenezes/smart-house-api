@@ -1,6 +1,5 @@
 #include <QtNetwork>
 #include <QWidget>
-#include <qtextedit.h>
 #include "cMessageManager.h"
 
 class cQServer : public QWidget
@@ -15,7 +14,10 @@ public:
 	void StartServer (int Port);
 
 	void OnClientConnected (QTcpServer* Server);
-
+	
 public slots:
 	void OnDataFromClient();
+
+signals:
+	void StartServerResponce(QString responce);
 };

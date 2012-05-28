@@ -7,9 +7,8 @@ qtserver::qtserver(QWidget *parent, Qt::WFlags flags)
 	QIntValidator* validator = new QIntValidator(1,65545,ui.lineEdit);
 	ui.lineEdit->setValidator(validator);
 	m_pSelf = this;
-	cUISignalManager::Initialize();
-	connect ( this, SIGNAL (OnEventFromUI()),cUISignalManager::Instance(),SLOT(OnEventFromUI()));
-	connect ( cUISignalManager::Instance(), SIGNAL (StartServerResponce(QString)),m_pSelf,SLOT(OnStartServerResponce(QString)));
+	m_pServer = new cQServer();
+	connect (m_pServer,SIGNAL(StartServerResponce(QString)),m_pSelf, SLOT(OnStartServerResponce(QString)));
 }
 
 qtserver::~qtserver()
@@ -20,10 +19,7 @@ qtserver* qtserver::Instance()
 {
 	return m_pSelf;
 }
-void qtserver::OnMessage(cEvent* even)
-{
-//////
-}
+
 void qtserver::on_StartServer_clicked()
 {
 	QString message;
@@ -47,7 +43,7 @@ void qtserver::on_StartServer_clicked()
 	event->m_eAction = Start;
 	event->m_eDestination = Server;
 	event->m_nPort = nTcpPort;
-	cUISignalManager::Instance()->Put(event);
+	m_pServer->StartServer(nTcpPort);
 	ui.textBrowser->setText(message);
 }
 
