@@ -12,23 +12,19 @@ HEADERS += ./cClient.h \
     ./cEvent.h \
     ./cList.h \
     ./cMessageManager.h \
-    ./cServer.h \
     ./cUtils.h \
     ./Definitions.h \
     ./GeneratedFiles/ui_qtserver.h \
     ./qtserver.h \
-    ./UISignalManager.h \
-    ./stdafx.h
+    ./cQServer.h
 SOURCES += ./cClient.cpp \
     ./cClientsList.cpp \
     ./cEvent.cpp \
     ./cMessageManager.cpp \
-    ./cServer.cpp \
+    ./cQServer.cpp \
     ./cUtils.cpp \
+    ./GeneratedFiles/Debug/moc_cQServer.cpp \
     ./GeneratedFiles/Debug/moc_qtserver.cpp \
-    ./GeneratedFiles/Debug/moc_UISignalManager.cpp \
     ./main.cpp \
-    ./qtserver.cpp \
-    ./UISignalManager.cpp \
-    ./stdafx.cpp
+    ./qtserver.cpp
 FORMS += ./qtserver.ui

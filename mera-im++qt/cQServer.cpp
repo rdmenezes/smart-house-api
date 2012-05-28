@@ -39,7 +39,8 @@ void cQServer::OnClientConnected (QTcpServer* Server)
 {
 	QTcpSocket* pClientSocket = Server->nextPendingConnection();
 	connect (pClientSocket, SIGNAL (readyRead()),this, SLOT(OnDataFromClient()));
-	pClientSocket->write("Server Response: Connected!");
+	pClientSocket->write("You're connected to the server");
+	emit StartServerResponce("New client connected with socketID " +  QString("%1").arg(pClientSocket->socketDescriptor()));
 }
 void cQServer::OnDataFromClient()
 {
