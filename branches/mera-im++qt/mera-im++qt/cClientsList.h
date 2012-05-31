@@ -1,7 +1,7 @@
 #pragma once
 #include "clist.h"
 #include "qstring.h"
-#include <QtNetwork>
+#include <QtNetwork/QtNetwork>
 class cClientsList :
 	public cList<cClient>
 {

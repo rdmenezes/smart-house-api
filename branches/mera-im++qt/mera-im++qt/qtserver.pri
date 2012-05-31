@@ -5,7 +5,7 @@
 # This is a reminder that you are using a generated .pro file.
 # Remove it when you are finished editing this file.
 message("You are running qmake on a generated .pro file. This may not work!")
-
+QT += core gui network
 
 HEADERS += ./cClient.h \
     ./cClientsList.h \
@@ -14,17 +14,15 @@ HEADERS += ./cClient.h \
     ./cMessageManager.h \
     ./cUtils.h \
     ./Definitions.h \
-    ./GeneratedFiles/ui_qtserver.h \
     ./qtserver.h \
-    ./cQServer.h
+    ./cQServer.h \
+    ui_qtserver.h
 SOURCES += ./cClient.cpp \
     ./cClientsList.cpp \
     ./cEvent.cpp \
     ./cMessageManager.cpp \
     ./cQServer.cpp \
     ./cUtils.cpp \
-    ./GeneratedFiles/Debug/moc_cQServer.cpp \
-    ./GeneratedFiles/Debug/moc_qtserver.cpp \
     ./main.cpp \
     ./qtserver.cpp
 FORMS += ./qtserver.ui
