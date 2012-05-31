@@ -27,9 +27,9 @@ private:
 	bool ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMessage);
 	bool ProcessLogoutRequest(QTcpSocket* ClientSocket);
 	bool IsUserRegistered(QString sUsername);
-	bool ProcessIMRequest(QTcpSocket* ClientSocket,QString* sMessage);
+    bool ProcessIMRequest(QString *sMessage);
 	bool ProcessStatusChangedRequest(QTcpSocket* ClientSocket,QString* sMessage);
-	SOCKET FindSocketByUsername(QString sUsername);
+    int FindSocketByUsername(QString sUsername);
 	//cClient* FindClientByUsername(string sUsername);
 	//cClient* FindClientBySocketID(SOCKET SocketID);
 	cClientsList* m_pClientsList;
@@ -37,7 +37,7 @@ private:
 public:
 
 	static cMessageManager* Instance();
-	SOCKET cMessageManager::GetClient(SOCKET Server);
+    int cMessageManager::GetClient(int Server);
 	bool ProcessDialog(QTcpSocket* Client, QString* Message);
 	//int StartServer();
 };

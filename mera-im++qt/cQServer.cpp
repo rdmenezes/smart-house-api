@@ -14,7 +14,6 @@ cQServer::~cQServer(void)
 
 void cQServer::StartServer (int Port)
 {
-	unsigned int nMaxConnections = 2;
 	unsigned int nConnections = 0; //Number of connected clients
 	if (!m_pTcpServer->listen(QHostAddress::Any, Port)) 
 	{

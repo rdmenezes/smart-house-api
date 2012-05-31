@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <winsock2.h>
 #include <qstring.h>
 using namespace std;
 

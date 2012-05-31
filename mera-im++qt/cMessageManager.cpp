@@ -58,7 +58,6 @@ bool cMessageManager::ProcessDialog(QTcpSocket* ClientSocket, QString* sMessage)
 	for (size_t i = 0; i <= nMessageLength; i++) {sMessage[i] = (sMessage[i] == '\n' ? '\0':sMessage[i]);}
 	*/
 	sMessage->remove('\n');
-	eMessageType eType;
 	QString sType = *sMessage->begin();
 
 	switch (sType.toInt())
@@ -81,7 +80,7 @@ bool cMessageManager::ProcessDialog(QTcpSocket* ClientSocket, QString* sMessage)
 			}
 		case eMESSAGE_IM:
 			{
-				rc = ProcessIMRequest(ClientSocket,sMessage);
+                rc = ProcessIMRequest(sMessage);
 				break;
 			}
 		case eMESSAGE_StatusChanged:
@@ -115,7 +114,7 @@ bool cMessageManager::ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* 
 		return false;
 	}
 
-	size_t i = 2;
+    signed int i = 2;
 	while (sMessage->at(i) != ',' && sMessage->at(i) != '\0')
 	{
 		sUsername.push_back(sMessage->at(i));
@@ -155,7 +154,7 @@ bool cMessageManager::ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMe
 {
 	QString sUsername,sPassword;
 	
-	size_t i = 2;
+    signed i = 2;
 	while (sMessage->at(i) != ',')
 	{
 		sUsername.push_back(sMessage->at(i));
@@ -214,11 +213,11 @@ bool cMessageManager::IsUserRegistered(QString sUsername)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessIMRequest(QTcpSocket* ClientSocket,QString* sMessage)
+bool cMessageManager::ProcessIMRequest(QString* sMessage)
 {
 	QString sDestination, sIM;
 
-	size_t i = 2;
+    signed i = 2;
 	while (sMessage->at(i) != ',')
 	{
 		sDestination.push_back(sMessage->at(i));
@@ -264,7 +263,7 @@ bool cMessageManager::ProcessStatusChangedRequest(QTcpSocket* ClientSocket,QStri
 
 ////////////////////////////////////////////////////////////////////////////////
 
-SOCKET cMessageManager::FindSocketByUsername(QString sUsername)
+int cMessageManager::FindSocketByUsername(QString sUsername)
 {
 	cClient* pClient = m_pClientsList->FindByUsername(sUsername);
 	if (pClient)

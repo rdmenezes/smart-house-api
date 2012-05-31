@@ -1,4 +1,4 @@
-#include <QtNetwork>
+#include <QtNetwork/QtNetwork>
 #include <QWidget>
 #include "cMessageManager.h"
 
