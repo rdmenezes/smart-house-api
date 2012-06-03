@@ -1,23 +1,30 @@
-#include <QtNetwork/QtNetwork>
-#include <QWidget>
+#pragma once
+
+#include <QtNetwork>
 #include "cMessageManager.h"
 
-class cQServer : public QWidget
+class cQServer : public QObject
 {
 	Q_OBJECT
 
 public:
 	cQServer(void);
 	~cQServer(void);
+
+	
+	void Start (int nPort);
+
+
+private:
 	QTcpServer* m_pTcpServer;
 
-	void StartServer (int Port);
-
-	void OnClientConnected (QTcpServer* Server);
+	void StartServer (int nPort);
 	
-public slots:
+private slots:
 	void OnDataFromClient();
+	void OnClientConnected ();
 
 signals:
-	void StartServerResponce(QString responce);
+	void ServerMessage(QString responce);
+	void ServerStarted();
 };

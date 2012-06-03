@@ -29,7 +29,7 @@ private:
 	bool IsUserRegistered(QString sUsername);
     bool ProcessIMRequest(QString *sMessage);
 	bool ProcessStatusChangedRequest(QTcpSocket* ClientSocket,QString* sMessage);
-    int FindSocketByUsername(QString sUsername);
+    QTcpSocket* FindSocketByUsername(QString sUsername);
 	cClientsList* m_pClientsList;
 
 public:
