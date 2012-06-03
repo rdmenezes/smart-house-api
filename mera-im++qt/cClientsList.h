@@ -1,5 +1,5 @@
 #pragma once
-#include "clist.h"
+#include "cList.h"
 #include "qstring.h"
 #include <QtNetwork>
 class cClientsList :

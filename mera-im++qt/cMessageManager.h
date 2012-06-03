@@ -35,7 +35,7 @@ private:
 public:
 
 	static cMessageManager* Instance();
-    int cMessageManager::GetClient(int Server);
+    int GetClient(int Server);
 	bool ProcessDialog(QTcpSocket* Client, QString* Message);
 	//int StartServer();
 };
