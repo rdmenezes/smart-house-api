@@ -22,7 +22,10 @@ private:
 
 private slots:
     void on_StartServer_clicked();
+    void OnExit();
 
+public slots:
+	void OnServerMessage(QString message);
 };
 
 #endif // QTSERVER_H

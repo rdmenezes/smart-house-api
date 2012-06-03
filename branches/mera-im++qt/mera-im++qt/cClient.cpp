@@ -6,7 +6,6 @@ cClient::cClient()
 {
 	m_bIsConnected = false;
 	m_eStatus = eSTATUS_Offline;
-	m_nSocketID = -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,15 +50,8 @@ cClient& cClient::operator = (const cClient& Copy)
 	m_sUserPassword = Copy.m_sUserPassword;
 	m_eStatus = Copy.m_eStatus;
 	m_bIsConnected = Copy.m_bIsConnected;
-	m_nSocketID = Copy.m_nSocketID;
+	m_pTcpSocket = Copy.m_pTcpSocket;
 	return *this;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void cClient::SetSocketID(int nSocketID)
-{
-	m_nSocketID = nSocketID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +84,12 @@ QString cClient::GetUserPassword()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int cClient::GetSocketID()
+QTcpSocket* cClient::GetTcpSocket()
 {
-	return m_nSocketID;
+	return m_pTcpSocket;
+}
+
+void cClient::SetTcpSocket(QTcpSocket* Socket)
+{
+	m_pTcpSocket = Socket;
 }

@@ -59,6 +59,10 @@ bool cMessageManager::ProcessDialog(QTcpSocket* ClientSocket, QString* sMessage)
 	*/
 	sMessage->remove('\n');
 	QString sType = *sMessage->begin();
+	if (sMessage->length() < 2)
+	{
+		return false;
+	}
 
 	switch (sType.toInt())
 	{
@@ -131,7 +135,7 @@ bool cMessageManager::ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* 
 
 	if (!IsUserRegistered(sUsername))
 	{
-		pUser->SetSocketID(ClientSocket->socketDescriptor());
+		pUser->SetTcpSocket(ClientSocket);
 		pUser->SetUserName(sUsername);
 		pUser->SetUserPassword(sPassword);
 		m_pClientsList->Insert(pUser);
@@ -192,7 +196,7 @@ bool cMessageManager::ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMe
 
 bool cMessageManager::ProcessLogoutRequest(QTcpSocket* ClientSocket)
 {
-	cClient* pClient = m_pClientsList->FindBySocketID(ClientSocket);
+	cClient* pClient = new cClient;//m_pClientsList->FindBySocketID(ClientSocket);
 	if (!pClient)
 	{
 		return false;
@@ -233,8 +237,7 @@ bool cMessageManager::ProcessIMRequest(QString* sMessage)
 
 	if (FindSocketByUsername(sDestination) > 0)
 	{
-		QTcpSocket* receiver = new QTcpSocket;
-		receiver->setSocketDescriptor(FindSocketByUsername(sDestination));
+		QTcpSocket* receiver = FindSocketByUsername(sDestination);
         receiver->write(sIM.toAscii().data());
 		return true;
 	}
@@ -249,7 +252,7 @@ bool cMessageManager::ProcessStatusChangedRequest(QTcpSocket* ClientSocket,QStri
 	QString sState;
 	size_t i = 2;
 	sState = sMessage[i];
-	cClient* pClient = m_pClientsList->FindBySocketID(ClientSocket);
+	cClient* pClient = new cClient;//m_pClientsList->FindBySocketID(ClientSocket);
 	if (!pClient)
 	{
 		return false;
@@ -263,14 +266,14 @@ bool cMessageManager::ProcessStatusChangedRequest(QTcpSocket* ClientSocket,QStri
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int cMessageManager::FindSocketByUsername(QString sUsername)
+QTcpSocket* cMessageManager::FindSocketByUsername(QString sUsername)
 {
 	cClient* pClient = m_pClientsList->FindByUsername(sUsername);
 	if (pClient)
 	{
-		return pClient->GetSocketID();
+		return pClient->GetTcpSocket();
 	}
-	return -1;
+	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

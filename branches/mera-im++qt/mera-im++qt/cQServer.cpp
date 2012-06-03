@@ -1,46 +1,58 @@
 #pragma once
 #include "cQServer.h"
 
-
-cQServer::cQServer(void)
+//////////////////////////////////////////////////////////////////////////////////////////
+cQServer::cQServer()
 {
-	m_pTcpServer = new QTcpServer();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 cQServer::~cQServer(void)
 {
 }
 
-void cQServer::StartServer (int Port)
+//////////////////////////////////////////////////////////////////////////////////////////
+void cQServer::Start(int nPort)
 {
-	unsigned int nConnections = 0; //Number of connected clients
-	if (!m_pTcpServer->listen(QHostAddress::Any, Port)) 
+	m_pTcpServer = new QTcpServer;
+	StartServer (nPort);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+void cQServer::StartServer (int nPort)
+{
+	if (!m_pTcpServer->listen(QHostAddress::Any, nPort)) 
 	{
-        qDebug() <<  QObject::tr("Unable to start the server: %1.")
-                            .arg(m_pTcpServer->errorString());
+        emit ServerMessage("Unable to start server. Reason: " + QString("%1").arg(m_pTcpServer->errorString()) + "\n");
     }
 
 	else
 	{
-	//	while(nMaxConnections <= 2)
-	//	{	
-			if(m_pTcpServer->waitForNewConnection(5000000000))
-			{
-				nConnections++;
-				OnClientConnected (m_pTcpServer);
-			}
-	//	}
+		emit ServerMessage("Server is successfully started on port " + QString("%1").arg(nPort) + "\n");
+		connect (m_pTcpServer, SIGNAL (newConnection()),this, SLOT (OnClientConnected(void)) );
+//		while(nConnections <= 2)
+//		{	
+//			if(m_pTcpServer->waitForNewConnection(-1))
+//			{
+//				nConnections++;
+//				QTcpSocket* pClient = m_pTcpServer->nextPendingConnection();
+//				OnClientConnected (pClient);
+//			}
+//		}
 	}
 }
 
-void cQServer::OnClientConnected (QTcpServer* Server)
+//////////////////////////////////////////////////////////////////////////////////////////
+void cQServer::OnClientConnected()
 {
-	QTcpSocket* pClientSocket = Server->nextPendingConnection();
-	connect (pClientSocket, SIGNAL (readyRead()),this, SLOT(OnDataFromClient()));
-	pClientSocket->write("You're connected to the server");
-	emit StartServerResponce("New client connected with socketID " +  QString("%1").arg(pClientSocket->socketDescriptor()));
+	QTcpSocket* pClient = new QTcpSocket();
+	pClient = m_pTcpServer->nextPendingConnection();
+	connect (pClient, SIGNAL (readyRead()),this, SLOT(OnDataFromClient()));
+	pClient->write("You're connected to the server");
+	emit ServerMessage("New client connected with socketID " +  QString("%1").arg(pClient->socketDescriptor()) + "\n");
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 void cQServer::OnDataFromClient()
 {
 	QTcpSocket* pClientSocket = (QTcpSocket*)sender();
@@ -49,3 +61,5 @@ void cQServer::OnDataFromClient()
 	QString buffer =  pClientSocket->readAll();
 	cMessageManager::Instance()->ProcessDialog(pClientSocket,&buffer);
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
