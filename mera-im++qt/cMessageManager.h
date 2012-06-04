@@ -5,6 +5,7 @@
 #include "cUtils.h"
 #include "cClientsList.h"
 #include <QtNetwork>
+#include "cXml.h"
 
 using namespace std;
 
