@@ -12,34 +12,28 @@ cQServer::~cQServer(void)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void cQServer::Start(int nPort)
+bool cQServer::Start(int nPort)
 {
 	m_pTcpServer = new QTcpServer;
-	StartServer (nPort);
+	return StartServer (nPort);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-void cQServer::StartServer (int nPort)
+bool cQServer::StartServer (int nPort)
 {
 	if (!m_pTcpServer->listen(QHostAddress::Any, nPort)) 
 	{
         emit ServerMessage("Unable to start server. Reason: " + QString("%1").arg(m_pTcpServer->errorString()) + "\n");
+		return false;
     }
 
 	else
 	{
 		emit ServerMessage("Server is successfully started on port " + QString("%1").arg(nPort) + "\n");
-		connect (m_pTcpServer, SIGNAL (newConnection()),this, SLOT (OnClientConnected(void)) );
-//		while(nConnections <= 2)
-//		{	
-//			if(m_pTcpServer->waitForNewConnection(-1))
-//			{
-//				nConnections++;
-//				QTcpSocket* pClient = m_pTcpServer->nextPendingConnection();
-//				OnClientConnected (pClient);
-//			}
-//		}
+		connect (m_pTcpServer, SIGNAL (newConnection()),this, SLOT (OnClientConnected(void)));
 	}
+
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -48,6 +42,7 @@ void cQServer::OnClientConnected()
 	QTcpSocket* pClient = new QTcpSocket();
 	pClient = m_pTcpServer->nextPendingConnection();
 	connect (pClient, SIGNAL (readyRead()),this, SLOT(OnDataFromClient()));
+	connect (pClient, SIGNAL (disconnected()),this, SLOT (OnClientDisconnected()));
 	pClient->write("You're connected to the server");
 	emit ServerMessage("New client connected with socketID " +  QString("%1").arg(pClient->socketDescriptor()) + "\n");
 }
@@ -63,3 +58,16 @@ void cQServer::OnDataFromClient()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+
+void cQServer::OnClientDisconnected()
+{
+	QTcpSocket* pClient = (QTcpSocket*)sender();
+	
+	if(!pClient)
+	{
+		return;
+	}
+
+	emit ServerMessage ("Client " +  QString("%1").arg(pClient->peerAddress().toString()) + " disconnected from the server\n" );
+	pClient->deleteLater();
+}

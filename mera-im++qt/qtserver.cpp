@@ -40,7 +40,10 @@ void qtserver::on_StartServer_clicked()
         return;
     }
 
-	m_pServer->Start(nTcpPort);
+	if (m_pServer->Start(nTcpPort))
+	{
+		ui->StartServer->setDisabled(true);
+	}
 
 }
 
@@ -48,6 +51,7 @@ void qtserver::OnExit()
 {
     QApplication::instance()->quit();
 }
+
 void qtserver::OnServerMessage(QString message)
 {
 	QString prev = ui->textBrowser->toPlainText();
