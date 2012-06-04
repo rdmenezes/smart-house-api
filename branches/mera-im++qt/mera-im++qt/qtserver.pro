@@ -4,7 +4,7 @@
 
 TEMPLATE = app
 TARGET = qtserver
-QT += core gui network
+QT += core gui network xml
 
 HEADERS += ./Definitions.h \
     ./cClient.h \
@@ -14,7 +14,8 @@ HEADERS += ./Definitions.h \
     ./cMessageManager.h \
     ./cUtils.h \
     ./cQServer.h \
-    ./qtserver.h
+    ./qtserver.h \
+    cXml.h
 SOURCES += ./cClient.cpp \
     ./cClientsList.cpp \
     ./cEvent.cpp \
@@ -22,5 +23,6 @@ SOURCES += ./cClient.cpp \
     ./cQServer.cpp \
     ./cUtils.cpp \
     ./main.cpp \
-    ./qtserver.cpp
+    ./qtserver.cpp \
+    cXml.cpp
 FORMS += ./qtserver.ui
