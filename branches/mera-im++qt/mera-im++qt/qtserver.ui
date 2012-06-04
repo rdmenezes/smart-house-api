@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>A. Loginova, S. Moskvichev</author>
  <class>qtserver</class>
  <widget class="QMainWindow" name="qtserver">
   <property name="geometry">
@@ -11,7 +12,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>qtserver</string>
+   <string>Mera-IM++</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QLineEdit" name="lineEdit">
@@ -58,19 +59,6 @@
     </property>
     <property name="text">
      <string>To start the server enter TCP Port number and press &quot;Start&quot; button</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>150</y>
-      <width>46</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
     </property>
    </widget>
   </widget>

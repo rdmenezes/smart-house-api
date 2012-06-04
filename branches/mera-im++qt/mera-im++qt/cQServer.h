@@ -12,17 +12,18 @@ public:
 	~cQServer(void);
 
 	
-	void Start (int nPort);
+	bool Start (int nPort);
 
 
 private:
 	QTcpServer* m_pTcpServer;
 
-	void StartServer (int nPort);
+	bool StartServer (int nPort);
 	
 private slots:
 	void OnDataFromClient();
 	void OnClientConnected ();
+	void OnClientDisconnected();
 
 signals:
 	void ServerMessage(QString responce);
