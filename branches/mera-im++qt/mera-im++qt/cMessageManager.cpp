@@ -277,3 +277,7 @@ QTcpSocket* cMessageManager::FindSocketByUsername(QString sUsername)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cClientsList* cMessageManager::GetClientsList()
+{
+	return m_pClientsList;
+}
