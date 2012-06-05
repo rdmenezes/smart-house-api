@@ -49,6 +49,8 @@ void qtserver::on_StartServer_clicked()
 
 void qtserver::OnExit()
 {
+	cXml File;
+	File.SaveAllData();
     QApplication::instance()->quit();
 }
 
