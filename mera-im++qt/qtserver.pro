@@ -14,8 +14,7 @@ HEADERS += ./Definitions.h \
     ./cMessageManager.h \
     ./cUtils.h \
     ./cQServer.h \
-    ./qtserver.h \
-    cXml.h
+    ./qtserver.h 
 SOURCES += ./cClient.cpp \
     ./cClientsList.cpp \
     ./cEvent.cpp \
@@ -23,6 +22,5 @@ SOURCES += ./cClient.cpp \
     ./cQServer.cpp \
     ./cUtils.cpp \
     ./main.cpp \
-    ./qtserver.cpp \
-    cXml.cpp
+    ./qtserver.cpp 
 FORMS += ./qtserver.ui
