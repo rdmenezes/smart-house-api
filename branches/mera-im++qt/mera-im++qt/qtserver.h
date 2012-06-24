@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "cQServer.h"
+#include "Definitions.h"
 
 namespace Ui {
 class qtserver;
@@ -19,6 +20,7 @@ public:
 private:
     Ui::qtserver *ui;
     cQServer* m_pServer;
+	eServerState m_eServerState;
 
 private slots:
     void on_StartServer_clicked();

@@ -13,6 +13,7 @@ public:
 
 	
 	bool Start (int nPort);
+	bool Stop (void);
 
 
 private:
