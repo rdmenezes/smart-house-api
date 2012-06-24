@@ -18,6 +18,15 @@ bool cQServer::Start(int nPort)
 	return StartServer (nPort);
 }
 
+bool cQServer::Stop(void)
+{
+	// TODO: Error cases must be handled below
+	m_pTcpServer->close();
+	emit ServerMessage("Server is stopped\n");
+	return true;
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////
 bool cQServer::StartServer (int nPort)
 {
@@ -71,3 +80,5 @@ void cQServer::OnClientDisconnected()
 	emit ServerMessage ("Client " +  QString("%1").arg(pClient->peerAddress().toString()) + " disconnected from the server\n" );
 	pClient->deleteLater();
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
