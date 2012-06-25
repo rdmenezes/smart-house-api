@@ -5,6 +5,8 @@
 #include "cUtils.h"
 #include "cClientsList.h"
 #include <QtNetwork>
+#include <QMainWindow>
+#include "cQServer.h"
 
 using namespace std;
 
@@ -15,13 +17,15 @@ enum eMessageType {
 	eMESSAGE_IM,
 	eMESSAGE_StatusChanged};
 
-class cMessageManager 
+class cMessageManager : public QObject
 {
+
+	Q_OBJECT
+
 private:
 
 	cMessageManager();
 	~cMessageManager();
-	static cMessageManager* m_pSelf; 
 	eMessageType ProcessMessageType(char x);
 	bool ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* sMessage);
 	bool ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMessage);
@@ -36,7 +40,10 @@ public:
 
 	static cMessageManager* Instance();
     int GetClient(int Server);
-	bool ProcessDialog(QTcpSocket* Client, QString* Message);
+	bool ProcessDialog(QTcpSocket* Client,int nType, QString* Message);
 	cClientsList* GetClientsList();
 	//int StartServer();
+
+signals:
+	void SendToClient(QTcpSocket* pClientSocket, QString sMessage);
 };

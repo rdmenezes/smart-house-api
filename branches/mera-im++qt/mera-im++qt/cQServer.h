@@ -8,9 +8,8 @@ class cQServer : public QObject
 	Q_OBJECT
 
 public:
-	cQServer(void);
-	~cQServer(void);
 
+	static cQServer* Instance();
 	
 	bool Start (int nPort);
 	bool Stop (void);
@@ -18,6 +17,9 @@ public:
 
 private:
 	QTcpServer* m_pTcpServer;
+	quint16 m_nNextBlockSize;
+	cQServer(void);
+	~cQServer(void);
 
 	bool StartServer (int nPort);
 	
@@ -25,6 +27,9 @@ private slots:
 	void OnDataFromClient();
 	void OnClientConnected ();
 	void OnClientDisconnected();
+	
+public slots:
+	void OnSendToClient(QTcpSocket* pClientSocket, QString sMessage);
 
 signals:
 	void ServerMessage(QString responce);

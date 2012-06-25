@@ -3,17 +3,13 @@
 
 using namespace std;
 
-cMessageManager* cMessageManager::m_pSelf = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 cMessageManager* cMessageManager::Instance()
 {
-	if (!m_pSelf)
-	{
-		m_pSelf = new cMessageManager;
-	}
-	return m_pSelf;
+	static cMessageManager pSelf;
+	return &pSelf;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,13 +23,12 @@ cMessageManager::cMessageManager ()
 
 cMessageManager::~cMessageManager()
 {
-	delete m_pSelf;
 	delete m_pClientsList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool cMessageManager::ProcessDialog(QTcpSocket* ClientSocket, QString* sMessage)
+bool cMessageManager::ProcessDialog(QTcpSocket* ClientSocket,int nType, QString* sMessage)
 {
 	cClient User;
 	bool rc = false;
@@ -58,13 +53,13 @@ bool cMessageManager::ProcessDialog(QTcpSocket* ClientSocket, QString* sMessage)
 	for (size_t i = 0; i <= nMessageLength; i++) {sMessage[i] = (sMessage[i] == '\n' ? '\0':sMessage[i]);}
 	*/
 	sMessage->remove('\n');
-	QString sType = *sMessage->begin();
+	//QString sType = *sMessage->begin();
 	if (sMessage->length() < 2)
 	{
 		return false;
 	}
 
-	switch (sType.toInt())
+	switch (nType)
 	{
 		case eMESSAGE_RegisterRequest:
 			{
@@ -109,7 +104,7 @@ eMessageType cMessageManager::ProcessMessageType(char x)
 bool cMessageManager::ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* sMessage)
 {
 	cClient* pUser = new cClient;
-	QString sUsername,sPassword;
+	QString sUsername,sPassword, sResponce;
 	bool rc = false;
 	//As we know, that message format Register Request is "0,username,password",
 	//so set i to 2 as we are aware, that username starts with the third element, because two first once are "0" and ","
@@ -135,17 +130,21 @@ bool cMessageManager::ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* 
 
 	if (!IsUserRegistered(sUsername))
 	{
+		sResponce = "Registered successfully";
 		pUser->SetTcpSocket(ClientSocket);
 		pUser->SetUserName(sUsername);
 		pUser->SetUserPassword(sPassword);
 		m_pClientsList->Insert(pUser);
-		ClientSocket->write("Registered successfully");
+		//ClientSocket->write("Registered successfully");
+		emit SendToClient(ClientSocket,sResponce);
 		rc = true;
 	}
 
 	else
 	{
-		ClientSocket->write("such user is already registered on this server");
+		sResponce = "such user is already registered on this server";
+		//ClientSocket->write("such user is already registered on this server");
+		emit SendToClient(ClientSocket,sResponce);
 	}
 
 	delete pUser;
@@ -156,7 +155,7 @@ bool cMessageManager::ProcessRegisterRequest(QTcpSocket* ClientSocket, QString* 
 
 bool cMessageManager::ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMessage)
 {
-	QString sUsername,sPassword;
+	QString sUsername,sPassword,sResponce;
 	
     signed i = 2;
 	while (sMessage->at(i) != ',')
@@ -174,20 +173,26 @@ bool cMessageManager::ProcessLoginRequest(QTcpSocket* ClientSocket, QString* sMe
 	cClient* pClient = m_pClientsList->FindByUsername(sUsername);
 	if (!pClient)
 	{
-		ClientSocket->write("User not found");
+		sResponce = "User not found";
+		//ClientSocket->write("User not found");
+		emit SendToClient(ClientSocket,sResponce);
 		return false;
 	}
 	else
 	{
 		if (pClient->GetUserPassword() == sPassword)
 		{
+			sResponce = "Log in successfully";
 			pClient->SetConnected(true);
-			ClientSocket->write("Log in successfully");
+			//ClientSocket->write("Log in successfully");
+			emit SendToClient(ClientSocket,sResponce);
 			return true;
 		}
 		else
 		{
-			ClientSocket->write("Incorrect password");
+			sResponce = "Incorrect password";
+			//ClientSocket->write("Incorrect password");
+			emit SendToClient(ClientSocket, sResponce);
 			return false;
 		}
 	}
@@ -238,7 +243,7 @@ bool cMessageManager::ProcessIMRequest(QString* sMessage)
 	if (FindSocketByUsername(sDestination) > 0)
 	{
 		QTcpSocket* receiver = FindSocketByUsername(sDestination);
-        receiver->write(sIM.toAscii().data());
+        emit SendToClient(receiver, sIM);
 		return true;
 	}
 
