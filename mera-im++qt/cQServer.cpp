@@ -1,9 +1,16 @@
 #pragma once
 #include "cQServer.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////
-cQServer::cQServer()
+cQServer* cQServer::Instance()
 {
+	static cQServer pSelf;
+	return &pSelf;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+cQServer::cQServer() : m_nNextBlockSize(0)
+{
+		m_pTcpServer = new QTcpServer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -14,7 +21,8 @@ cQServer::~cQServer(void)
 //////////////////////////////////////////////////////////////////////////////////////////
 bool cQServer::Start(int nPort)
 {
-	m_pTcpServer = new QTcpServer;
+	//cMessageManager* pMSGManager = ;
+	connect (cMessageManager::Instance(), SIGNAL (SendToClient(QTcpSocket*, QString)), SLOT (OnSendToClient(QTcpSocket*, QString)));
 	return StartServer (nPort);
 }
 
@@ -41,7 +49,6 @@ bool cQServer::StartServer (int nPort)
 		emit ServerMessage("Server is successfully started on port " + QString("%1").arg(nPort) + "\n");
 		connect (m_pTcpServer, SIGNAL (newConnection()),this, SLOT (OnClientConnected(void)));
 	}
-
 	return true;
 }
 
@@ -52,18 +59,42 @@ void cQServer::OnClientConnected()
 	pClient = m_pTcpServer->nextPendingConnection();
 	connect (pClient, SIGNAL (readyRead()),this, SLOT(OnDataFromClient()));
 	connect (pClient, SIGNAL (disconnected()),this, SLOT (OnClientDisconnected()));
-	pClient->write("You're connected to the server");
+	OnSendToClient(pClient, "You're connected to the server");
 	emit ServerMessage("New client connected with socketID " +  QString("%1").arg(pClient->socketDescriptor()) + "\n");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 void cQServer::OnDataFromClient()
 {
-	QTcpSocket* pClientSocket = (QTcpSocket*)sender();
+	/*QTcpSocket* pClientSocket = (QTcpSocket*)sender();
     QDataStream in(pClientSocket);
     in.setVersion(QDataStream::Qt_4_2);
 	QString buffer =  pClientSocket->readAll();
 	cMessageManager::Instance()->ProcessDialog(pClientSocket,&buffer);
+	*/
+
+	QTcpSocket* pClientSocket = (QTcpSocket*)sender();
+	QDataStream in(pClientSocket);
+	in.setVersion(QDataStream::Qt_4_2);
+	for (;;) 
+	{
+		if (!m_nNextBlockSize) {
+			if (pClientSocket->bytesAvailable() < sizeof(quint16)) {
+				break;
+			}
+			in >> m_nNextBlockSize;
+		}
+
+		if (pClientSocket->bytesAvailable() < m_nNextBlockSize) {
+			break;
+		}
+		int Type;
+		QString str;
+		in >> Type >>str;
+
+		m_nNextBlockSize = 0;
+		cMessageManager::Instance()->ProcessDialog(pClientSocket,Type,&str);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -82,3 +113,16 @@ void cQServer::OnClientDisconnected()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+
+void cQServer::OnSendToClient (QTcpSocket* pClientSocket, QString sMessage)
+{
+	QByteArray  arrBlock;
+	QDataStream out(&arrBlock, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_2);
+	out << quint16(0) << sMessage;
+
+	out.device()->seek(0);
+	out << quint16(arrBlock.size() - sizeof(quint16));
+
+	pClientSocket->write(arrBlock);
+}

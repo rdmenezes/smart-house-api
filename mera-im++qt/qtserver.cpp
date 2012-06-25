@@ -7,7 +7,7 @@ qtserver::qtserver(QWidget *parent) :
 {
     ui->setupUi(this);
 	m_eServerState = Stopped;
-    m_pServer = new cQServer;
+    m_pServer = cQServer::Instance();
     connect (ui->actionExit,SIGNAL(activated()),this, SLOT(OnExit()));
 	connect (m_pServer, SIGNAL (ServerMessage(QString)),this, SLOT (OnServerMessage(QString)));
 
