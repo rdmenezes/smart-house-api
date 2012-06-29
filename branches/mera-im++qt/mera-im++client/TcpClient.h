@@ -1,5 +1,6 @@
 #pragma once
-
+#include "Definitions.h"
+#include "Message.h"
 #include <QtNetwork>
 
 

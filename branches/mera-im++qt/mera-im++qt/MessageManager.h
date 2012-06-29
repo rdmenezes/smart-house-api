@@ -7,6 +7,7 @@
 #include <QtNetwork>
 #include <QMainWindow>
 #include "QServer.h"
+#include "Message.h"
 
 using namespace std;
 
@@ -36,13 +37,16 @@ private:
     QTcpSocket* FindSocketByUsername(QString sUsername);
 	cClientsList* m_pClientsList;
 
+	void OnRegisterRequest(cRegisterRequest* pRequest);
+
+
 public:
 
 	static cMessageManager* Instance();
     int GetClient(int Server);
 	bool ProcessDialog(QTcpSocket* Client,int nType, QString* Message);
 	cClientsList* GetClientsList();
-	//int StartServer();
+	void OnMessage(cBaseMessage* pMessage, QTcpSocket* pSenderSocket);
 
 signals:
 	void SendToClient(QTcpSocket* pClientSocket, QString sMessage);
