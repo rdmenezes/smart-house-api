@@ -1,5 +1,5 @@
 #pragma once
-#include "cQServer.h"
+#include "QServer.h"
 
 cQServer* cQServer::Instance()
 {

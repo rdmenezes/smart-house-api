@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtNetwork>
-#include "cMessageManager.h"
+#include "MessageManager.h"
 
 class cQServer : public QObject
 {
