@@ -7,8 +7,11 @@ TARGET = qtclient
 QT += core gui network
 
 HEADERS += ./QtClient.h \
-           ./TcpClient.h
+           ./TcpClient.h \
+           ./Definitions.h \
+           ./Message.h
 SOURCES += ./QtClient.cpp \
            ./main.cpp \
-           ./TcpClient.cpp
+           ./TcpClient.cpp \
+           ./Message.cpp
 FORMS += ./QtClient.ui

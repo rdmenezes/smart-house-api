@@ -286,3 +286,19 @@ cClientsList* cMessageManager::GetClientsList()
 {
 	return m_pClientsList;
 }
+
+void cMessageManager::OnMessage(cBaseMessage* pMessage, QTcpSocket* pSenderSocket)
+{
+	switch(pMessage->m_nID)
+	{
+	case RegisterRequest:
+		OnRegisterRequest((cRegisterRequest* )pMessage);
+	}
+}
+
+void cMessageManager::OnRegisterRequest( cRegisterRequest* pRequest )
+{
+	int a = 0;
+	a++;
+	a--;
+}

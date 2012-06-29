@@ -56,7 +56,7 @@ void cTcpClient::ConnectClicked (QString sServer, int nPort)
 	connect(m_pTcpSocket, SIGNAL(connected()), SLOT(OnConnected()));
 }
 
-void cTcpClient::OnSendToServer(QString message, int Type)
+/*void cTcpClient::OnSendToServer(QString message, int Type)
 {
 	QByteArray  arrBlock;
 	QDataStream out(&arrBlock, QIODevice::WriteOnly);
@@ -67,7 +67,29 @@ void cTcpClient::OnSendToServer(QString message, int Type)
 	out << quint16(arrBlock.size() - sizeof(quint16));
 
 	m_pTcpSocket->write(arrBlock);
+}*/
+
+
+
+void cTcpClient::OnSendToServer(QString message, int Type)
+{
+	cRegisterRequest pMessage;
+	pMessage.m_nID = RegisterRequest;
+	pMessage.m_sUsername = "UserName";
+	pMessage.m_sPassword = "Password";
+
+	QByteArray  arrBlock;
+	QDataStream out(&arrBlock, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_2);
+	out << quint16(0) << pMessage.m_nID << pMessage;
+
+	out.device()->seek(0);
+	out << quint16(arrBlock.size() - sizeof(quint16));
+
+	m_pTcpSocket->write(arrBlock);
 }
+
+
 
 void cTcpClient::OnConnected()
 {
