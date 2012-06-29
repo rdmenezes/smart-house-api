@@ -7,20 +7,22 @@ TARGET = qtserver
 QT += core gui network xml
 
 HEADERS += ./Definitions.h \
-    ./cClient.h \
-    ./cClientsList.h \
-    ./cEvent.h \
-    ./cList.h \
-    ./cMessageManager.h \
-    ./cUtils.h \
-    ./cQServer.h \
-    ./qtserver.h 
-SOURCES += ./cClient.cpp \
-    ./cClientsList.cpp \
-    ./cEvent.cpp \
-    ./cMessageManager.cpp \
-    ./cQServer.cpp \
-    ./cUtils.cpp \
+    ./Client.h \
+    ./ClientsList.h \
+    ./Event.h \
+    ./List.h \
+    ./MessageManager.h \
+    ./Utils.h \
+    ./QServer.h \
+    ./qtserver.h \
+    ./Message.h
+SOURCES += ./Client.cpp \
+    ./ClientsList.cpp \
+    ./Event.cpp \
+    ./MessageManager.cpp \
+    ./QServer.cpp \
+    ./Utils.cpp \
     ./main.cpp \
-    ./qtserver.cpp 
+    ./qtserver.cpp \
+    ./Message.cpp
 FORMS += ./qtserver.ui

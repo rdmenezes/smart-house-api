@@ -1,12 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include "cClient.h"
-#include "cUtils.h"
-#include "cClientsList.h"
+#include "Client.h"
+#include "Utils.h"
+#include "ClientsList.h"
 #include <QtNetwork>
 #include <QMainWindow>
-#include "cQServer.h"
+#include "QServer.h"
 
 using namespace std;
 

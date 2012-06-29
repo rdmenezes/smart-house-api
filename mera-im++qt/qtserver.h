@@ -2,7 +2,7 @@
 #define QTSERVER_H
 
 #include <QMainWindow>
-#include "cQServer.h"
+#include "QServer.h"
 #include "Definitions.h"
 
 namespace Ui {
