@@ -9,7 +9,8 @@ QT += core gui network
 HEADERS += ./QtClient.h \
            ./TcpClient.h \
            ./Definitions.h \
-           ./Message.h
+           ./Message.h \
+           ./Serialization.h
 SOURCES += ./QtClient.cpp \
            ./main.cpp \
            ./TcpClient.cpp \
