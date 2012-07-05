@@ -3,7 +3,7 @@
 set CONF=-debug-and-release
 echo Setting up a Qt environment...
 
-set QTDIR=%CD%\mera-im++qt\qt
+set QTDIR=%CD%\qt
 echo -- QTDIR set to %QTDIR%
 set PATH=%QTDIR%\bin;%PATH%
 echo -- Added %QTDIR%\bin to PATH
