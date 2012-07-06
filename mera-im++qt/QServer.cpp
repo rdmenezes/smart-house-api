@@ -1,6 +1,16 @@
 #pragma once
 #include "QServer.h"
 
+
+
+QDataStream& operator>>(QDataStream& in, cRegisterRequest &Request)
+{
+	in	>> Request.m_nID
+		>> Request.m_sUsername
+		>> Request.m_sPassword;
+	return in;
+}
+
 cQServer* cQServer::Instance()
 {
 	static cQServer pSelf;
@@ -66,13 +76,6 @@ void cQServer::OnClientConnected()
 //////////////////////////////////////////////////////////////////////////////////////////
 void cQServer::OnDataFromClient()
 {
-	/*QTcpSocket* pClientSocket = (QTcpSocket*)sender();
-    QDataStream in(pClientSocket);
-    in.setVersion(QDataStream::Qt_4_2);
-	QString buffer =  pClientSocket->readAll();
-	cMessageManager::Instance()->ProcessDialog(pClientSocket,&buffer);
-	*/
-
 	QTcpSocket* pClientSocket = (QTcpSocket*)sender();
 	QDataStream in(pClientSocket);
 	in.setVersion(QDataStream::Qt_4_2);
@@ -88,12 +91,17 @@ void cQServer::OnDataFromClient()
 		if (pClientSocket->bytesAvailable() < m_nNextBlockSize) {
 			break;
 		}
-		int Type;
-		QString str;
-		in >> Type >>str;
-
 		m_nNextBlockSize = 0;
-		cMessageManager::Instance()->ProcessDialog(pClientSocket,Type,&str);
+		int nID = -1;
+		
+		in >> nID;
+		switch (nID)
+		{
+			case RegisterRequest:
+				cRegisterRequest Request;
+				in >> Request;
+		}
+		
 	}
 }
 

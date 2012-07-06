@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Definitions.h"
-#include <QObject>
+#include "QtNetwork"
 
 class cBaseMessage {
 public:
@@ -9,10 +9,17 @@ public:
 	cBaseMessage();
 	~cBaseMessage();
 
-	int m_nID;
+	virtual cBaseMessage* Deserialize(QDataStream in){return 0;};
 
-	cBaseMessage* Deserialize(QDataStream* in);
+	int m_nID;
 };
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//																					   //
+//				Class cRegisterRequest is used for registration a user on the server   //
+//																					   //
+/////////////////////////////////////////////////////////////////////////////////////////
+
 
 class cRegisterRequest : public cBaseMessage {
 public:
@@ -20,6 +27,7 @@ public:
 	cRegisterRequest();
 	~cRegisterRequest();
 
+	virtual cBaseMessage* Deserialize(QDataStream in);
 	QString m_sUsername;
 	QString m_sPassword;
 };
