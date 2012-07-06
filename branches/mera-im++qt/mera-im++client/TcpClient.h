@@ -9,6 +9,7 @@ class cTcpClient : public QObject
 	Q_OBJECT
 
 public:
+
 	static cTcpClient* Instance();
 
 

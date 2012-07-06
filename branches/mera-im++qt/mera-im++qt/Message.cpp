@@ -2,6 +2,7 @@
 
 cBaseMessage::cBaseMessage()
 {
+	m_nID = -1;
 }
 
 cBaseMessage::~cBaseMessage()
@@ -10,6 +11,7 @@ cBaseMessage::~cBaseMessage()
 
 cRegisterRequest::cRegisterRequest()
 {
+	m_nID = RegisterRequest;
 }
 cRegisterRequest::~cRegisterRequest()
 {

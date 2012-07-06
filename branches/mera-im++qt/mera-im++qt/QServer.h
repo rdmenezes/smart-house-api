@@ -23,7 +23,7 @@ private:
 
 	bool StartServer (int nPort);
 	
-private slots:
+public slots:
 	void OnDataFromClient();
 	void OnClientConnected ();
 	void OnClientDisconnected();

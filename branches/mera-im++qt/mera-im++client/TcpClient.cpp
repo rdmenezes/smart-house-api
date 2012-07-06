@@ -1,6 +1,13 @@
 #pragma once
 #include "TcpClient.h"
-#include "Serialization.h"
+
+QDataStream& operator<<(QDataStream& out, cRegisterRequest& Request) 
+{
+	out << Request.m_nID 
+		<< Request.m_sUsername
+		<< Request.m_sPassword;
+	return out;
+}
 
 cTcpClient* cTcpClient::Instance()
 {
@@ -82,7 +89,7 @@ void cTcpClient::OnSendToServer(QString message, int Type)
 	QByteArray  arrBlock;
 	QDataStream out(&arrBlock, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_2);
-	out << quint16(0) << Message;
+	out << quint16(0) << Message.m_nID << Message;
 
 	out.device()->seek(0);
 	out << quint16(arrBlock.size() - sizeof(quint16));

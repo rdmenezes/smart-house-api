@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Definitions.h"
-#include <QObject>
+#include "QtNetwork"
 
 class cBaseMessage {
 public:
@@ -9,8 +9,15 @@ public:
 	cBaseMessage();
 	~cBaseMessage();
 
-	NetworkMessageType m_nID;
+	int m_nID;
 };
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//																					   //
+//				Class cRegisterRequest is used for registration a user on the server   //
+//																					   //
+/////////////////////////////////////////////////////////////////////////////////////////
+
 
 class cRegisterRequest : public cBaseMessage {
 public:
