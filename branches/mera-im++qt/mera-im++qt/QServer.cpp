@@ -92,9 +92,10 @@ void cQServer::OnDataFromClient()
 			break;
 		}
 		m_nNextBlockSize = 0;
-		int nID = -1;
 		
+		int nID = -1;		
 		in >> nID;
+
 		switch (nID)
 		{
 			case RegisterRequest:
